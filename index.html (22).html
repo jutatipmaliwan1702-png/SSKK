@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ระบบค่าส่วนกลาง บ้านแสนสุข แก่งคอย</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f5f1;--surface:#fff;--surface2:#f0efe9;--border:#e0ded6;--border2:#c5c2b8;
+  --text:#18180e;--text2:#68665e;--text3:#9e9b91;
+  --blue:#1a56db;--blue-bg:#eff6ff;--blue-bd:#bfdbfe;
+  --red:#dc2626;--red-bg:#fef2f2;--red-bd:#fecaca;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-bd:#bbf7d0;
+  --amber:#d97706;--amber-bg:#fffbeb;--amber-bd:#fde68a;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-bd:#ddd6fe;
+  --teal:#0f766e;--r:8px;--rl:12px;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05);
+  --sh2:0 4px 20px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.55;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.nav-brand{font-size:15px;font-weight:700;padding:14px 20px 14px 0;border-right:1px solid var(--border);margin-right:8px;white-space:nowrap}
+.nav-brand span{color:var(--blue)}
+.nav-tabs{display:flex;flex:1;overflow-x:auto}
+.nav-tab{padding:15px 14px;font-size:13.5px;cursor:pointer;border:none;background:transparent;color:var(--text2);border-bottom:2.5px solid transparent;font-family:inherit;transition:.15s;white-space:nowrap}
+.nav-tab:hover{color:var(--text);background:var(--surface2)}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.main{max-width:1140px;margin:0 auto;padding:24px}
+.page{display:none}.page.active{display:block}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:700px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;box-shadow:var(--sh)}
+.stat-lbl{font-size:11.5px;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.stat-val{font-size:26px;font-weight:700}
+.stat-val.danger{color:var(--red)}.stat-val.warning{color:var(--amber)}.stat-val.success{color:var(--green)}.stat-val.blue{color:var(--blue)}
+.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.toolbar input,.toolbar select{height:36px;padding:0 11px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.15s}
+.toolbar input:focus,.toolbar select:focus{border-color:var(--blue)}
+.toolbar input{flex:2;min-width:160px}.toolbar select{flex:1;min-width:110px}
+.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+thead th{background:var(--surface2);padding:9px 12px;text-align:left;font-weight:600;color:var(--text2);font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface2)}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap;border:1px solid}
+.badge.danger{background:var(--red-bg);color:var(--red);border-color:var(--red-bd)}
+.badge.success{background:var(--green-bg);color:var(--green);border-color:var(--green-bd)}
+.badge.warning{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)}
+.badge.neutral{background:var(--surface2);color:var(--text2);border-color:var(--border)}
+.badge.blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)}
+.badge.purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-bd)}
+.badge.teal{background:#f0fdfa;color:var(--teal);border-color:#99f6e4}
+.btn{padding:6px 14px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;transition:.15s;white-space:nowrap}
+.btn:hover{background:var(--surface2);border-color:var(--border2)}
+.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn.primary:hover{background:#1648c0}
+.btn.success{background:var(--green-bg);color:var(--green);border-color:var(--green-bd)}.btn.success:hover{background:#dcfce7}
+.btn.danger{background:var(--red-bg);color:var(--red);border-color:var(--red-bd)}
+.btn.amber{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)}
+.btn.teal{background:var(--teal);color:#fff;border-color:var(--teal)}.btn.teal:hover{background:#0d6b63}
+.btn.purple{background:var(--purple);color:#fff;border-color:var(--purple)}.btn.purple:hover{background:#6d28d9}
+.btn.save-btn{background:var(--teal);color:#fff;border-color:var(--teal);font-size:14px;padding:9px 22px}
+.btn.sm{padding:4px 10px;font-size:12px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px 22px;box-shadow:var(--sh);margin-bottom:18px}
+.form-row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.form-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
+.form-field label{font-size:11.5px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px}
+.form-field input,.form-field select{height:38px;padding:0 11px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:.15s}
+.form-field input:focus,.form-field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.07)}
+.month-lbl{font-size:11.5px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+.month-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.mbtn{padding:6px 4px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);font-size:12.5px;cursor:pointer;color:var(--text);font-family:inherit;text-align:center;transition:.15s;font-weight:500}
+.mbtn:hover{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.mbtn.sel{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+.alert{padding:10px 13px;border-radius:var(--r);font-size:13px;margin:8px 0;border:1px solid}
+.alert.info{background:var(--blue-bg);color:#1e40af;border-color:var(--blue-bd)}
+.alert.success{background:var(--green-bg);color:#15803d;border-color:var(--green-bd)}
+.alert.danger{background:var(--red-bg);color:var(--red);border-color:var(--red-bd)}
+.alert.warning{background:var(--amber-bg);color:#92400e;border-color:var(--amber-bd)}
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--rl);padding:26px 20px;text-align:center;cursor:pointer;background:var(--surface2);transition:.2s}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--blue-bg)}
+.upload-text{font-size:13.5px;font-weight:600}.upload-sub{font-size:12px;color:var(--text3);margin-top:3px}
+.ai-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);padding:12px 0}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:bce 1.2s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes bce{0%,60%,100%{opacity:.15;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;overflow-y:auto;padding:24px}.modal-inner{background:#fff;border-radius:var(--rl);padding:16px;}
+.modal-inner{max-width:760px;margin:0 auto;background:#fff;border-radius:var(--rl);padding:16px}
+.modal-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.toast{position:fixed;bottom:24px;right:24px;color:#fff;padding:12px 20px;border-radius:var(--rl);font-size:13.5px;font-weight:500;box-shadow:var(--sh2);z-index:999;display:none;animation:slideup .3s ease;max-width:360px}
+@keyframes slideup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.empty{padding:36px;text-align:center;color:var(--text3);font-size:13px}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.sec-title{font-size:15px;font-weight:700}
+.sec-sub{font-size:12px;color:var(--text3);margin-top:1px}
+
+/* doc styles */
+.doc-wrap{background:#ffffff !important;border:1px solid #b8b5ac;border-radius:4px;font-family:'Sarabun',sans-serif;font-size:14.5px;color:#111;max-width:720px;box-shadow:var(--sh2)}
+.doc-wrap *{font-family:'Sarabun',sans-serif;color:#111;background-color:transparent}
+.iv-head{text-align:center;padding:14px 20px 8px;border-bottom:2px solid #111}
+.iv-co{font-size:17px;font-weight:700;letter-spacing:.3px}.iv-co-en{font-size:12.5px;font-weight:600;margin-top:1px;color:#333}
+.iv-addr{font-size:12.5px;margin-top:2px;color:#333}
+.iv-title{font-size:16px;font-weight:700;margin-top:8px;letter-spacing:2px;color:#b91c1c;text-align:center}
+.iv-meta{display:grid;grid-template-columns:1fr auto;gap:0 20px;padding:10px 18px;border-bottom:1px solid #ccc;font-size:13.5px}
+.iv-ml{font-weight:700;min-width:100px;display:inline-block}
+.iv-tbl-hd{display:flex;background:#fde8d0;border-bottom:1px solid #e8a07c;font-size:13.5px;font-weight:700}
+.iv-tbl-hd>div,.iv-tbl-row>div{padding:6px 14px}
+.iv-tbl-row{display:flex;border-bottom:1px solid #ebebeb;font-size:13.5px;min-height:22px}
+.iv-detail{flex:1}.iv-amt{width:150px;text-align:right;font-weight:600;display:flex;align-items:center;justify-content:flex-end}
+.iv-total{display:flex;justify-content:space-between;padding:9px 14px;border-top:2px solid #111;font-size:16px;font-weight:700}
+.iv-words{text-align:center;padding:5px 14px 7px;font-size:13.5px;font-style:italic;border-bottom:1px solid #ddd;color:#444}
+.iv-bank{padding:8px 18px;font-size:13.5px;border-top:1px solid #ddd;background:#fffdf7}
+.iv-note{font-size:12px;padding:4px 18px 6px;border-top:1px solid #ddd;color:#555;font-style:italic}
+.iv-regards{text-align:right;padding:8px 18px 4px;font-size:13px;color:#333;border-top:1px solid #ddd}
+.rv-head{text-align:center;padding:14px 20px 8px;border-bottom:2.5px solid #111}
+.rv-co{font-size:17px;font-weight:700}.rv-co-en{font-size:12.5px;font-weight:600;margin-top:1px;color:#333}
+.rv-addr{font-size:12.5px;margin-top:2px;color:#333}
+.rv-title{font-size:20px;font-weight:700;letter-spacing:3px;margin-top:8px;text-align:center}
+.rv-meta{display:grid;grid-template-columns:1fr auto;gap:0 20px;padding:10px 18px;border-bottom:1px solid #ccc;font-size:13.5px}
+.rv-meta-l,.rv-meta-r{display:flex;flex-direction:column;gap:3px}
+.rv-meta-r{min-width:190px;align-items:flex-end}
+.rv-mrow{display:flex;gap:6px}.rv-ml{font-weight:700;min-width:88px}
+.rv-tbl-hd{display:flex;background:#dbeafe;border-bottom:1px solid #93c5fd;font-size:13.5px;font-weight:700}
+.rv-tbl-hd>div,.rv-tbl-row>div{padding:6px 14px}
+.rv-tbl-row{display:flex;border-bottom:1px solid #ebebeb;font-size:13.5px;min-height:22px}
+.rv-detail{flex:1}.rv-amt{width:150px;text-align:right;font-weight:700;display:flex;align-items:center;justify-content:flex-end;font-size:14.5px}
+.rv-sub{font-size:12px;color:#555;margin-top:2px}
+.rv-sum{display:flex;justify-content:flex-end;padding:5px 14px;border-bottom:1px solid #ebebeb;font-size:13.5px;font-weight:600}
+.rv-words{text-align:center;padding:5px 14px 7px;font-size:13.5px;font-style:italic;border-bottom:1px solid #ddd;color:#444}
+.rv-total{display:flex;justify-content:space-between;padding:9px 14px;border-top:2.5px solid #111;font-size:16px;font-weight:700}
+.rv-sign{display:grid;grid-template-columns:1fr 1fr;padding:10px 40px 8px;gap:40px;font-size:13px;text-align:center}
+.rv-sign-line{height:40px;border-bottom:1px solid #888;margin-bottom:4px}
+.rv-sign-name{font-weight:700}
+.rv-note{font-size:12px;padding:4px 14px;border-top:1px solid #ddd;color:#555;font-style:italic}
+.rv-pay{display:flex;align-items:center;gap:18px;padding:6px 14px;border-top:1px solid #ddd;font-size:13.5px}
+.rv-pay-lbl{font-weight:700}
+.rv-cb{display:inline-flex;align-items:center;gap:4px}
+.rv-cb-box{width:13px;height:13px;border:1.5px solid #444;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:900}
+
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:12px}
+.loading-overlay.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="loading-overlay" id="loading">
+  <div style="font-size:36px">🏠</div>
+  <div style="font-size:15px;font-weight:600;color:#1a56db">กำลังโหลดข้อมูล...</div>
+</div>
+<nav class="nav">
+  <div class="nav-brand">🏠 บ้านแสนสุข <span>แก่งคอย</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="navTo('dashboard',this)">ภาพรวม</button>
+    <button class="nav-tab" onclick="navTo('invoice',this)">ใบแจ้งหนี้</button>
+    <button class="nav-tab" onclick="navTo('pay',this)">ออกใบเสร็จ</button>
+    <button class="nav-tab" onclick="navTo('log',this)">ประวัติ</button>
+    <button class="nav-tab" onclick="navTo('customers',this)">ลูกค้า</button>
+    <button class="nav-tab" onclick="navTo('settings',this)">⚙ ตั้งค่า</button>
+  </div>
+</nav>
+<div class="main">
+
+<!-- DASHBOARD -->
+<div id="p-dashboard" class="page active">
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-lbl">ลูกค้าทั้งหมด</div><div class="stat-val blue" id="s-total">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">เรียกเก็บได้ (แปลง)</div><div class="stat-val danger" id="s-owe">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">ยอดค้างรวม (บาท)</div><div class="stat-val warning" id="s-debt">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">ออกใบเสร็จแล้ว</div><div class="stat-val success" id="s-done">0</div></div>
+  </div>
+  <div class="sec-hd">
+    <div><div class="sec-title">แปลงค้างชำระ</div><div class="sec-sub" id="dash-sub">—</div></div>
+    <button class="btn amber sm" onclick="exportOweXLSX()">📥 Export Excel</button>
+  </div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>แปลง</th><th>ชื่อลูกค้า</th><th>เดือนค้าง</th><th>ยอดค้าง</th><th>เดือนที่ค้าง</th><th></th></tr></thead>
+    <tbody id="dash-body"></tbody></table>
+  </div>
+</div>
+
+<!-- INVOICE -->
+<div id="p-invoice" class="page">
+  <div class="sec-hd" style="flex-wrap:wrap;gap:10px">
+    <div><div class="sec-title">ใบแจ้งหนี้ / เรียกเก็บ</div></div>
+    <div class="btn-row" style="gap:8px">
+      <button class="btn amber sm" onclick="exportInvXLSX()">📥 Excel</button>
+      <button class="btn primary sm" onclick="exportAllInvoicesHTML()">🖨️ รวมใบแจ้งหนี้ PDF</button>
+    </div>
+  </div>
+  <div class="toolbar" style="flex-wrap:wrap;gap:8px;align-items:center">
+    <span style="font-size:13px;color:var(--text2);white-space:nowrap">เรียกเก็บเดือน</span>
+    <select id="inv-bill-year" onchange="renderInvoice()" style="min-width:90px">
+      <option value="">ปีนี้</option>
+    </select>
+    <select id="inv-bill-mon" onchange="renderInvoice()" style="min-width:90px">
+      <option value="">เดือนนี้</option>
+    </select>
+    <span style="font-size:13px;color:var(--text2);white-space:nowrap">วันที่ออกใบ</span>
+    <input type="date" id="inv-global-date" onchange="renderInvoice()" style="height:34px;border-radius:6px;border:1px solid var(--border);padding:0 8px;font-family:inherit;font-size:13px">
+    <div style="height:20px;width:1px;background:var(--border)"></div>
+    <input type="text" id="inv-q" placeholder="🔍 ค้นหาแปลงหรือชื่อ..." oninput="renderInvoice()" style="flex:1;min-width:140px">
+    <select id="inv-months" onchange="renderInvoice()">
+      <option value="">ทุกเดือนค้าง</option>
+      <option value="1">1 เดือนขึ้นไป</option>
+      <option value="2">2 เดือนขึ้นไป</option>
+      <option value="3">3 เดือนขึ้นไป</option>
+      <option value="4">4 เดือนขึ้นไป</option>
+      <option value="5">5 เดือนขึ้นไป</option>
+    </select>
+    <select id="inv-sort" onchange="renderInvoice()">
+      <option value="plot-asc">เรียงเลขแปลง</option>
+      <option value="total-desc">ยอดค้างมากสุด</option>
+      <option value="total-asc">ยอดค้างน้อยสุด</option>
+      <option value="months-desc">เดือนค้างมากสุด</option>
+    </select>
+  </div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>แปลง</th><th>ชื่อลูกค้า</th><th style="text-align:right">ค้าง</th><th style="text-align:right">ยอด (฿)</th><th>เดือนที่ค้าง</th><th></th></tr></thead>
+    <tbody id="inv-body"></tbody></table>
+  </div>
+</div>
+
+<!-- PAY -->
+<div id="p-pay" class="page">
+  <div class="split">
+    <div>
+      <div class="form-card">
+        <div class="sec-title" style="margin-bottom:10px">✏️ ข้อมูลใบเสร็จ</div>
+        <div class="form-row">
+          <div class="form-field" style="flex:.9"><label>แปลง *</label>
+            <input type="text" id="r-plot" placeholder="B7, A21, H130" oninput="plotLookup(this.value)" style="text-transform:uppercase">
+          </div>
+          <div class="form-field"><label>เลขที่ใบเสร็จ</label><input type="text" id="r-num" placeholder="RV-SSKK-04-007"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>วันที่รับเงิน</label><input type="date" id="r-date"></div>
+          <div class="form-field"><label>ช่องทางชำระ</label>
+            <select id="r-ptype"><option>เงินโอน</option><option>PromptPay</option><option>เงินสด</option><option>แคชเชียร์เชค</option></select>
+          </div>
+          <div class="form-field" style="max-width:88px"><label>ปี พ.ศ.</label><input type="number" id="r-year" value="2569"></div>
+        </div>
+        <div id="r-info" style="display:none" class="alert info"></div>
+        <div class="form-row" style="margin-bottom:4px">
+          <div class="form-field">
+            <label>ยอดที่รับจริง (฿) <span style="font-weight:400;color:var(--text3);text-transform:none">— แก้ไขได้ถ้าโอนปัดเศษ</span></label>
+            <input type="number" id="r-actual" placeholder="ระบบจะคำนวณให้อัตโนมัติ" step="0.5" oninput="onActualChange(this.value)" style="font-size:15px;font-weight:600">
+          </div>
+          <div class="form-field" style="max-width:140px;justify-content:flex-end;padding-top:18px">
+            <button class="btn btn-outline sm" onclick="resetActual()" style="height:38px">↺ รีเซ็ต</button>
+          </div>
+        </div>
+        <div id="r-actual-note" style="display:none;font-size:12px;color:var(--amber);margin-bottom:8px">⚠️ ยอดที่ระบุต่างจากยอดคำนวณ — ใบเสร็จจะแสดงยอดที่รับจริง</div>
+        <div style="margin-bottom:12px">
+          <div class="month-lbl">เดือนที่ชำระ</div>
+          <div class="month-grid">
+            <button class="mbtn" data-m="1">ม.ค.</button><button class="mbtn" data-m="2">ก.พ.</button>
+            <button class="mbtn" data-m="3">มี.ค.</button><button class="mbtn" data-m="4">เม.ย.</button>
+            <button class="mbtn" data-m="5">พ.ค.</button><button class="mbtn" data-m="6">มิ.ย.</button>
+            <button class="mbtn" data-m="7">ก.ค.</button><button class="mbtn" data-m="8">ส.ค.</button>
+            <button class="mbtn" data-m="9">ก.ย.</button><button class="mbtn" data-m="10">ต.ค.</button>
+            <button class="mbtn" data-m="11">พ.ย.</button><button class="mbtn" data-m="12">ธ.ค.</button>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" onclick="genReceipt()">📋 แสดงใบเสร็จ</button>
+          <button class="btn" onclick="clearForm()">ล้าง</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div id="receipt-area">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:60px 20px;text-align:center;color:var(--text3)">
+          <div style="font-size:40px;opacity:.25;margin-bottom:12px">🧾</div>
+          <div>กรอกข้อมูลด้านซ้าย แล้วกด "แสดงใบเสร็จ"</div>
+        </div>
+      </div>
+      <div id="receipt-actions" style="display:none;margin-top:10px" class="btn-row">
+        <button class="btn save-btn" onclick="saveTransaction()">💾 บันทึก</button>
+        <button class="btn primary" onclick="doPrint('receipt')">🖨️ พิมพ์</button>
+        <button class="btn teal" onclick="downloadReceiptHTML()">⬇ HTML</button>
+        <button class="btn amber" onclick="exportReceiptXLSX()">⬇ Excel</button>
+        <button class="btn" onclick="clearForm()">ออกใหม่</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOG -->
+<div id="p-log" class="page">
+  <div class="sec-hd" style="flex-wrap:wrap;gap:10px">
+    <div><div class="sec-title">ประวัติรายการ</div></div>
+    <div class="btn-row" style="flex-wrap:wrap;gap:8px;align-items:center">
+      <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2)">ตั้งแต่</span>
+      <input type="date" id="log-date-from" onchange="renderLog()" style="height:34px;border-radius:6px;border:1px solid var(--border);padding:0 8px;font-family:inherit;font-size:13px">
+      <span style="font-size:13px;color:var(--text2)">ถึง</span>
+      <input type="date" id="log-date-to" onchange="renderLog()" style="height:34px;border-radius:6px;border:1px solid var(--border);padding:0 8px;font-family:inherit;font-size:13px">
+      <button class="btn sm" onclick="document.getElementById('log-date-from').value='';document.getElementById('log-date-to').value='';renderLog()">✕ ล้าง</button>
+      <button class="btn amber sm" onclick="exportLogXLSX()">📥 Excel ประวัติ</button>
+      <button class="btn primary sm" onclick="exportAllReceiptsXLSX()">🖨️ รวมใบเสร็จ</button>
+      <button class="btn danger sm" onclick="clearLog()">🗑 ล้างทั้งหมด</button>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>แปลง</th><th>ชื่อลูกค้า</th><th>เลขที่ใบเสร็จ</th><th>วันที่</th><th>เดือนที่ชำระ</th><th>ยอด (฿)</th><th>ช่องทาง</th><th>พิมพ์ซ้ำ</th><th></th></tr></thead>
+    <tbody id="log-body"></tbody></table>
+  </div>
+</div>
+
+<!-- CUSTOMERS -->
+<div id="p-customers" class="page">
+  <div class="sec-hd"><div class="sec-title">ลูกค้าทั้งหมด</div></div>
+  <div class="toolbar">
+    <input type="text" id="c-q" placeholder="🔍 ค้นหา..." oninput="renderCustomers()">
+    <select id="c-type" onchange="renderCustomers()"><option value="">ทุกประเภท</option><option value="A">A</option><option value="B">B</option><option value="H">H</option></select>
+    <select id="c-sort" onchange="renderCustomers()">
+      <option value="plot">เรียงตามแปลง (A→B→H)</option>
+      <option value="num-asc">เลขแปลง น้อย→มาก</option>
+      <option value="num-desc">เลขแปลง มาก→น้อย</option>
+    </select>
+    <select id="c-sf" onchange="renderCustomers()">
+      <option value="">ทุกสถานะ</option>
+      <option value="owe">เรียกเก็บได้</option>
+      <option value="prepaid">จ่ายล่วงหน้า</option>
+      <option value="notrans">ยังไม่โอน</option>
+    </select>
+  </div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>แปลง</th><th>ชื่อ</th><th>เนื้อที่</th><th>ค่า/เดือน</th><th>สถานะ</th><th></th></tr></thead>
+    <tbody id="c-body"></tbody></table>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="p-settings" class="page">
+  <div class="form-card">
+    <div class="sec-title" style="margin-bottom:8px">📂 โหลด Excel ข้อมูลลูกค้า</div>
+    <div class="alert info" style="margin-bottom:10px">อัปโหลด <strong>ค่าส่วนกลาง_SSKK.xlsx</strong> — อ่าน Sheet "รายรับ" อัตโนมัติ<br>ระบบจะอ่าน <strong>วันที่โอน</strong> (คอลัมน์ "โอน") เพื่อคำนวณรอบเรียกเก็บอัตโนมัติ</div>
+    <div class="upload-zone" id="xl-zone" onclick="document.getElementById('xl-file').click()"
+         ondragover="event.preventDefault();this.classList.add('drag')"
+         ondragleave="this.classList.remove('drag')" ondrop="handleXlDrop(event)">
+      <div style="font-size:26px;opacity:.4;margin-bottom:6px">📊</div>
+      <div class="upload-text">คลิกหรือวาง .xlsx ที่นี่</div>
+      <div class="upload-sub">ค่าส่วนกลาง_SSKK.xlsx</div>
+    </div>
+    <input type="file" id="xl-file" accept=".xlsx,.xls" style="display:none" onchange="handleXlFile(this)">
+    <div id="xl-out" style="margin-top:12px"></div>
+  </div>
+  <div class="form-card">
+    <div class="sec-title" style="margin-bottom:10px">⚙️ ตั้งค่าการคำนวณ</div>
+    <div class="form-row">
+      <div class="form-field"><label>คำนวณถึงเดือน</label><input type="number" id="cfg-m" value="4" min="1" max="12"></div>
+      <div class="form-field"><label>ปี ค.ศ.</label><input type="number" id="cfg-y" value="2026"></div>
+      <div class="form-field"><label>ราคา/ตร.ว (บาท)</label><input type="number" id="cfg-r" value="15"></div>
+    </div>
+    <button class="btn primary" onclick="applyConfig()">✓ อัปเดต</button>
+    <div id="cfg-msg" style="margin-top:8px"></div>
+  </div>
+  <div class="form-card">
+    <div class="sec-hd"><div><div class="sec-title">ข้อมูลที่แก้ไขแล้ว</div><div class="sec-sub" id="override-count">—</div></div>
+    <button class="btn danger sm" onclick="clearCustOverrides()">↺ รีเซ็ตข้อมูลทั้งหมด</button></div>
+  </div>
+  <div class="form-card"><div class="sec-title" style="margin-bottom:6px">สรุป</div><div id="cfg-summary" style="font-size:13px;color:var(--text2)">—</div></div>
+  <div class="form-card">
+    <div class="sec-hd" style="margin-bottom:12px">
+      <div><div class="sec-title">✏️ แก้ไขข้อมูลลูกค้า</div><div class="sec-sub">แก้ชื่อ เนื้อที่ หรือวันโอนของแต่ละแปลง</div></div>
+    </div>
+    <div class="form-row" style="margin-bottom:12px">
+      <div class="form-field" style="flex:.6"><label>เลขแปลง (แก้ไข/เพิ่มใหม่)</label>
+        <input type="text" id="edit-plot" placeholder="เช่น B7 หรือ A67 (ใหม่)" style="text-transform:uppercase" oninput="loadEditPlot(this.value)">
+      </div>
+    </div>
+    <div id="edit-form" style="display:none">
+      <div id="edit-new-badge" style="display:none;margin-bottom:8px">
+        <span class="badge blue">✨ เพิ่มแปลงใหม่</span>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>ชื่อลูกค้า</label><input type="text" id="edit-name" placeholder="ชื่อ-นามสกุล"></div>
+        <div class="form-field" style="max-width:100px"><label>ประเภท</label>
+          <select id="edit-type" style="height:36px;border-radius:6px;border:1px solid var(--border);font-family:inherit">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="H">H</option>
+          </select>
+        </div>
+        <div class="form-field" style="max-width:110px"><label>เนื้อที่ (ตร.ว)</label><input type="number" id="edit-area" step="0.1" placeholder="54.0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>วันโอนกรรมสิทธิ์</label><input type="date" id="edit-xdate"></div>
+        <div class="form-field"><label>ชำระส่วนกลางถึง (YYYY-MM)</label>
+          <input type="month" id="edit-lp" placeholder="เช่น 2026-04">
+        </div>
+      </div>
+      <div class="alert info" style="font-size:12px;margin-bottom:8px">
+        💡 ถ้าลูกค้าจ่ายล่วงหน้า 2 ปีตอนโอน ให้เว้นช่อง "ชำระถึง" ว่างไว้ ระบบคำนวณให้อัตโนมัติ
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" onclick="saveEditPlot()">💾 บันทึก</button>
+        <button class="btn" onclick="document.getElementById('edit-form').style.display='none';document.getElementById('edit-new-badge').style.display='none'">ยกเลิก</button>
+      </div>
+      <div id="edit-msg" style="margin-top:8px"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- INVOICE MODAL -->
+<div class="modal-bg" id="inv-modal">
+  <div class="modal-inner">
+    <div class="modal-bar" style="flex-wrap:wrap;gap:8px">
+      <div class="btn-row" style="flex-wrap:wrap;gap:6px;align-items:center">
+
+        <button class="btn primary" onclick="doPrint('invoice')">🖨️ พิมพ์</button>
+        <button class="btn teal" onclick="downloadInvHTML()">⬇ HTML</button>
+        <button class="btn amber" onclick="exportSingleInvXLSX()">⬇ Excel</button>
+        <button class="btn purple" onclick="markInvoiceSent()">✓ บันทึกว่าส่งแล้ว</button>
+      </div>
+      <button class="btn danger" onclick="closeModal()">✕ ปิด</button>
+    </div>
+    <div id="inv-modal-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+function toast(msg,type){
+  type=type||'green';
+  var t=document.getElementById('toast');
+  if(!t)return;
+  t.textContent=msg;
+  var colors={green:'#0f766e',red:'#dc2626',amber:'#d97706',blue:'#1a56db'};
+  t.style.background=colors[type]||'#0f766e';
+  t.style.display='block';
+  clearTimeout(t._t);
+  t._t=setTimeout(function(){t.style.display='none';},3200);
+}
+/* ═══════════════════════════════════════════
+   SUPABASE API — ระบบค่าส่วนกลาง SSKK
+   ═══════════════════════════════════════════ */
+const SB_URL = 'https://psxkzzvkmsrzjcebiqll.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzeGt6enZrbXNyempjZWJpcWxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NTg4NDYsImV4cCI6MjA5MjIzNDg0Nn0.rXMv9-JIdtxWsGO5RY6EJWExnNckNJ3-X3tR9czElAQ';
+const SB_HEADERS = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=minimal'
+};
+
+async function sbGet(table, params) {
+  params = params || '';
+  const r = await fetch(SB_URL + '/rest/v1/' + table + '?order=plot' + (params ? '&' + params : ''), {
+    headers: Object.assign({}, SB_HEADERS, {'Prefer': 'return=representation'})
+  });
+  if (!r.ok) throw new Error('GET ' + table + ' failed: ' + r.status);
+  return r.json();
+}
+
+async function sbInsert(table, data) {
+  const r = await fetch(SB_URL + '/rest/v1/' + table, {
+    method: 'POST', headers: SB_HEADERS, body: JSON.stringify(data)
+  });
+  if (!r.ok) {
+    const err = await r.text();
+    throw new Error('INSERT ' + table + ' failed: ' + err);
+  }
+}
+
+async function sbUpsert(table, data) {
+  const r = await fetch(SB_URL + '/rest/v1/' + table, {
+    method: 'POST',
+    headers: Object.assign({}, SB_HEADERS, {'Prefer': 'resolution=merge-duplicates,return=minimal'}),
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) {
+    const err = await r.text();
+    throw new Error('UPSERT ' + table + ' failed: ' + err);
+  }
+}
+
+async function sbDelete(table, filter) {
+  const r = await fetch(SB_URL + '/rest/v1/' + table + '?' + filter, {
+    method: 'DELETE', headers: SB_HEADERS
+  });
+  if (!r.ok) throw new Error('DELETE ' + table + ' failed: ' + r.status);
+}
+
+async function sbUpdate(table, filter, data) {
+  const r = await fetch(SB_URL + '/rest/v1/' + table + '?' + filter, {
+    method: 'PATCH', headers: SB_HEADERS, body: JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error('UPDATE ' + table + ' failed: ' + r.status);
+}
+
+/* ════ STATE ════ */
+let CUST=[],LU={},PAID={},INV_SENT={},TXN=[],OWE={};
+let selMonths=[],CFG={month:4,year:2026,rate:15};
+let currentInvPlot=null,currentReceiptData=null,_calcTotal=0;
+
+const MN=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const MF=['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const fmt=n=>(+n).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtYM=ym=>{const[y,m]=ym.split('-');return MN[+m]+(+y+543);};
+function fmtDate(d){
+  if(!d)return'—';
+  // YYYY-MM-DD → parse ให้ถูก timezone
+  if(typeof d==='string'&&d.match(/^\d{4}-\d{2}-\d{2}$/)){
+    const[y,m,dd]=d.split('-').map(Number);
+    return new Date(y,m-1,dd).toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+  }
+  return new Date(d).toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+}
+
+/* ════ LOADING ════ */
+let _lc=0;
+function showLoading(){_lc++;const el=document.getElementById('loading');if(el)el.classList.remove('hidden');}
+function hideLoading(){_lc=Math.max(0,_lc-1);if(!_lc){const el=document.getElementById('loading');if(el)el.classList.add('hidden');}}
+
+/* ════ LOAD ALL DATA ════ */
+const DEF_CUST=[
+  {plot:"A9",name:"นางสาวนัชญาวีร์ พูลศิริเจิดสกุล",area:59.0,monthly:885.0,plot_num:9,type:"A",transfer_date:"2023-10-03",last_paid:"2026-01"},
+  {plot:"A10",name:"นายวรพันธ์ จันทร์ฉาย",area:58.9,monthly:883.5,plot_num:10,type:"A",transfer_date:"2024-04-02",last_paid:"2026-03"},
+  {plot:"A18",name:"ฉัตรชัย บุณยเลขา",area:54.0,monthly:810.0,plot_num:18,type:"A",transfer_date:"2023-08-04",last_paid:"2026-04"},
+  {plot:"A19",name:"จักรพล  เฟื่องหัตถกิจ",area:53.9,monthly:808.5,plot_num:19,type:"A",transfer_date:"2023-07-26",last_paid:"2026-04"},
+  {plot:"A20",name:"นายธัณย์ศรุต  กอบสินธันยวัต",area:59.9,monthly:898.5,plot_num:20,type:"A",transfer_date:"2023-08-11",last_paid:"2026-04"},
+  {plot:"A21",name:"นายกิติคุณ  คำภา",area:60.0,monthly:900.0,plot_num:21,type:"A",transfer_date:"2023-07-19",last_paid:"2026-03"},
+  {plot:"A22",name:"นางอำไพ วงษ์อนุ",area:65.7,monthly:985.5,plot_num:22,type:"A",transfer_date:"2023-10-26",last_paid:"2026-04"},
+  {plot:"A23",name:"นายขจร มิ่งมานพ(082-3642438 อัญชลี)",area:64.8,monthly:972.0,plot_num:23,type:"A",transfer_date:"2023-11-22",last_paid:"2026-04"},
+  {plot:"A24",name:"คุณธงชัย พุ่มสาขา(092-2641235,096-8329222)",area:54.0,monthly:810.0,plot_num:24,type:"A",transfer_date:"2024-04-05",last_paid:"2026-04"},
+  {plot:"A25",name:"นายภูษิต   พิศงาม",area:53.9,monthly:808.5,plot_num:25,type:"A",transfer_date:"2023-11-13",last_paid:"2026-04"},
+  {plot:"A26",name:"ชัญญาภัค หนูทอง",area:53.9,monthly:808.5,plot_num:26,type:"A",transfer_date:"2023-12-06",last_paid:"2026-04"},
+  {plot:"A27",name:"นางสาวธัญลักษณ์ พิมพ์ปราโมทย์",area:54.0,monthly:810.0,plot_num:27,type:"A",transfer_date:"2023-12-27",last_paid:"2026-06"},
+  {plot:"A28",name:"นายนิพันธ์ ศรีสุข(092-7459795,083-4540185)",area:54.0,monthly:810.0,plot_num:28,type:"A",transfer_date:"2023-11-28",last_paid:"2026-04"},
+  {plot:"A36",name:"นางสาวกุลบดี วีระพงษ์(089-4446359 , 089-7031267)",area:53.9,monthly:808.5,plot_num:36,type:"A",transfer_date:"2024-05-14",last_paid:"2026-04"},
+  {plot:"A37",name:"นางกรรณิการ์ ไกรศาสตร์",area:53.9,monthly:808.5,plot_num:37,type:"A",transfer_date:"2023-11-02",last_paid:"2026-03"},
+  {plot:"A40",name:"นางสาวสุภารัตน์ สาคร",area:71.0,monthly:1065.0,plot_num:40,type:"A",transfer_date:"2024-06-26",last_paid:"2026-07"},
+  {plot:"A41",name:"นางประยูร ทองท้วม",area:63.9,monthly:958.5,plot_num:41,type:"A",transfer_date:"2024-05-17",last_paid:"2026-05"},
+  {plot:"A42",name:"นายนรินทร์ พุกมา",area:53.9,monthly:808.5,plot_num:42,type:"A",transfer_date:"2024-09-17",last_paid:"2026-08"},
+  {plot:"A43",name:"นางสาวจำปา ชูรัศมี",area:54.0,monthly:810.0,plot_num:43,type:"A",transfer_date:"2024-10-22",last_paid:"2026-10"},
+  {plot:"A44",name:"นายปิยะพจน์ กรรณาริก",area:54.0,monthly:810.0,plot_num:44,type:"A",transfer_date:"2024-09-09",last_paid:"2026-08"},
+  {plot:"A45",name:"คุณชิตตะวัน แช่มดี",area:54.0,monthly:810.0,plot_num:45,type:"A",transfer_date:"2025-03-11",last_paid:"2027-01"},
+  {plot:"A52",name:"คุณเดชพนม ปั่นฟัก",area:53.9,monthly:808.5,plot_num:52,type:"A",transfer_date:"2024-09-13",last_paid:"2026-08"},
+  {plot:"A57",name:"นายสงกรานต์ พนมหอม",area:53.9,monthly:808.5,plot_num:57,type:"A",transfer_date:"2024-08-22",last_paid:"2026-08"},
+  {plot:"A58",name:"นายอนุรักษ์  ขันดำ",area:54.0,monthly:810.0,plot_num:58,type:"A",transfer_date:"2026-01-20",last_paid:"2028-01"},
+  {plot:"A59",name:"นายวสันต์ กวางเฮง",area:54.0,monthly:810.0,plot_num:59,type:"A",transfer_date:"2025-06-06",last_paid:"2027-05"},
+  {plot:"A66",name:"นางสาวจารุวรรณ บุญไทย",area:53.9,monthly:808.5,plot_num:66,type:"A",transfer_date:"2025-07-25",last_paid:"2027-07"},
+  {plot:"B7",name:"นายประวิทย์ จำปาทอง",area:49.7,monthly:745.5,plot_num:7,type:"B",transfer_date:"2024-02-13",last_paid:"2026-04"},
+  {plot:"B8",name:"นายยศธนันทน์   อ่อนศรี",area:44.7,monthly:670.5,plot_num:8,type:"B",transfer_date:"2023-11-29",last_paid:"2026-03"},
+  {plot:"B11",name:"อภิวัฒน์ หยุดยั้ง",area:53.8,monthly:807.0,plot_num:11,type:"B",transfer_date:"2023-10-18",last_paid:"2026-04"},
+  {plot:"B12",name:"ตะวัน ปัญณะสมบรูณ์",area:51.8,monthly:777.0,plot_num:12,type:"B",transfer_date:"2023-11-15",last_paid:"2025-11"},
+  {plot:"B13",name:"นายพัฒวุฒิ คนึงเหตุ",area:48.1,monthly:721.5,plot_num:13,type:"B",transfer_date:"2023-10-20",last_paid:"2026-03"},
+  {plot:"B14",name:"นางสาวนันทนัท  ตั้งเกียรติรัตน์",area:47.4,monthly:711.0,plot_num:14,type:"B",transfer_date:"2023-09-01",last_paid:"2026-04"},
+  {plot:"B15",name:"นายพิทยา ขุมทองดี",area:56.9,monthly:853.5,plot_num:15,type:"B",transfer_date:"2023-08-31",last_paid:"2026-04"},
+  {plot:"B16",name:"จิราวัฒน์ สุขคำนา",area:42.0,monthly:630.0,plot_num:16,type:"B",transfer_date:"2023-09-21",last_paid:"2026-02"},
+  {plot:"B17",name:"นางสาวภัทรสุดา  เพ็งพิพาทย์",area:42.0,monthly:630.0,plot_num:17,type:"B",transfer_date:"2023-09-20",last_paid:"2026-03"},
+  {plot:"B29",name:"อรทัย ปะกิราเค",area:42.0,monthly:630.0,plot_num:29,type:"B",transfer_date:"2024-06-27",last_paid:"2026-06"},
+  {plot:"B30",name:"คุณทัศนะ การบรรจง",area:54.8,monthly:822.0,plot_num:30,type:"B",transfer_date:"2024-01-11",last_paid:"2026-03"},
+  {plot:"B31",name:"คุณหทัยรัตน์ พร้อมประดิษฐ",area:52.0,monthly:780.0,plot_num:31,type:"B",transfer_date:"2025-06-30",last_paid:"2027-06"},
+  {plot:"B32",name:"นายณัฐชนน ลีนะกุล",area:42.0,monthly:630.0,plot_num:32,type:"B",transfer_date:"2025-09-04",last_paid:"2027-08"},
+  {plot:"B33",name:"คุณกิตติศักดิ์ สุภาพ",area:42.0,monthly:630.0,plot_num:33,type:"B",transfer_date:"2024-09-30",last_paid:"2026-09"},
+  {plot:"B34",name:"คุณลัดดาวัลย์ พานคำ",area:42.0,monthly:630.0,plot_num:34,type:"B",transfer_date:"2024-08-09",last_paid:"2026-07"},
+  {plot:"B35",name:"คุณกิ่งแก้ว พิมพิพัฒน์",area:42.0,monthly:630.0,plot_num:35,type:"B",transfer_date:"2025-05-13",last_paid:"2027-04"},
+  {plot:"B38",name:"นายรังสรรค์ คงศิริ",area:42.0,monthly:630.0,plot_num:38,type:"B",transfer_date:"2024-04-11",last_paid:"2026-04"},
+  {plot:"B39",name:"นายภัทรพงศ์ รักษาพล",area:49.3,monthly:739.5,plot_num:39,type:"B",transfer_date:"2024-03-20",last_paid:"2026-03"},
+  {plot:"B46",name:"นางพัชรินทร์ โชติชัชวาล",area:53.2,monthly:798.0,plot_num:46,type:"B",transfer_date:"2024-08-20",last_paid:"2026-08"},
+  {plot:"B47",name:"คุณการะเกตุ สีสอาด",area:53.8,monthly:807.0,plot_num:47,type:"B",transfer_date:"2025-07-22",last_paid:"2027-07"},
+  {plot:"B48",name:"คุณชไมพร ไชยวงษ์",area:42.0,monthly:630.0,plot_num:48,type:"B",transfer_date:"2025-07-30",last_paid:"2027-07"},
+  {plot:"B49",name:"นายพัฒนะ เกลี้ยงไตรรงค์",area:42.0,monthly:630.0,plot_num:49,type:"B",transfer_date:"2025-12-29",last_paid:"2027-12"},
+  {plot:"B53",name:"คุณวิชิต เนาวะศรี",area:51.9,monthly:778.5,plot_num:53,type:"B",transfer_date:"2025-12-23",last_paid:"2027-12"},
+  {plot:"H115",name:"นายสรายุทธ อินน้ำคม",area:33.8,monthly:507.0,plot_num:115,type:"H",transfer_date:"2023-12-15",last_paid:"2026-03"},
+  {plot:"H116",name:"นายจตุพงศ์ เสนาชัยน้อย",area:31.7,monthly:475.5,plot_num:116,type:"H",transfer_date:"2024-02-08",last_paid:"2026-04"},
+  {plot:"H117",name:"คุณประจบ คล้ายสุรินทร์",area:27.0,monthly:405.0,plot_num:117,type:"H",transfer_date:"2024-05-13",last_paid:"2026-04"},
+  {plot:"H118",name:"นายพงษ์ระพี ลือกิจนา",area:31.1,monthly:466.5,plot_num:118,type:"H",transfer_date:"2024-01-23",last_paid:"2026-03"},
+  {plot:"H119",name:"บริษัท ซิโนมา กรุ๊ป จำกัด",area:68.3,monthly:1024.5,plot_num:119,type:"H",transfer_date:"2024-07-09",last_paid:"2026-06"},
+  {plot:"H120",name:"บริษัท ซิโนมา กรุ๊ป จำกัด (รวมกับ H119)",area:0,monthly:0,plot_num:120,type:"H",transfer_date:"2024-07-09",last_paid:"2026-06"},
+  {plot:"H121",name:"บริษัท ซิโนมา กรุ๊ป จำกัด (รวมกับ H119)",area:0,monthly:0,plot_num:121,type:"H",transfer_date:"2024-07-09",last_paid:"2026-06"},
+  {plot:"H122",name:"นางสาวภัคสุภางค์ รัตนมโนมัย",area:23.3,monthly:349.5,plot_num:122,type:"H",transfer_date:"2025-03-06",last_paid:"2027-01"},
+  {plot:"H123",name:"คุณนฤมล ลี้สกุล",area:21.4,monthly:321.0,plot_num:123,type:"H",transfer_date:"2025-08-08",last_paid:"2027-07"},
+  {plot:"H124",name:"นาย พงศกร รังสะอินทร์",area:21.4,monthly:321.0,plot_num:124,type:"H",transfer_date:"2025-12-25",last_paid:"2027-12"},
+  {plot:"H125",name:"คุณพัฒนพงษ์ ตินโย",area:21.4,monthly:321.0,plot_num:125,type:"H",transfer_date:"2025-06-26",last_paid:"2027-06"},
+  {plot:"H126",name:"นางสาวอดิศร โกไศยกานนท์",area:23.3,monthly:349.5,plot_num:126,type:"H",transfer_date:"2025-05-20",last_paid:"2027-05"},
+  {plot:"H127",name:"นางสาววีรภัทรา ทองวิลัย",area:30.1,monthly:451.5,plot_num:127,type:"H",transfer_date:"2023-10-25",last_paid:"2026-02"},
+  {plot:"H128",name:"คุณพรพรรณ  ศิริพาณิชนนท์",area:21.1,monthly:316.5,plot_num:128,type:"H",transfer_date:"2023-11-03",last_paid:"2026-12"},
+  {plot:"H129",name:"สุดารัตน์ สำเลิศรัมย์",area:30.0,monthly:450.0,plot_num:129,type:"H",transfer_date:"2023-10-18",last_paid:"2026-03"},
+  {plot:"H130",name:"คุณนิรัชรา ศรีเผือก",area:22.4,monthly:336.0,plot_num:130,type:"H",transfer_date:"2023-12-08",last_paid:"2026-04"},
+  {plot:"H131",name:"คุณอนงนิตย์ คัมภิรานนท์",area:21.4,monthly:321.0,plot_num:131,type:"H",transfer_date:"2024-11-20",last_paid:"2026-04"},
+  {plot:"H132",name:"สุรพงษ์ วงชาลี",area:21.4,monthly:321.0,plot_num:132,type:"H",transfer_date:"2023-11-30",last_paid:"2026-04"},
+  {plot:"H133",name:"นายกานพงศ์ อินทรมานวงศ์",area:21.4,monthly:321.0,plot_num:133,type:"H",transfer_date:"2023-11-30",last_paid:"2026-02"},
+  {plot:"H134",name:"กฤษณุ อภัยไธสง",area:21.4,monthly:321.0,plot_num:134,type:"H",transfer_date:"2023-12-08",last_paid:"2026-04"},
+  {plot:"H135",name:"นายธงชัย สันติตรานนท์",area:32.1,monthly:481.5,plot_num:135,type:"H",transfer_date:"2024-05-03",last_paid:"2026-04"},
+  {plot:"H136",name:"คุณอาทร ตีประติ้ว",area:32.5,monthly:487.5,plot_num:136,type:"H",transfer_date:"2024-04-03",last_paid:"2026-03"},
+  {plot:"H137",name:"คุณธัญลักษณ์ พิชัยโรจน์วงศ์",area:22.8,monthly:342.0,plot_num:137,type:"H",transfer_date:"2024-04-23",last_paid:"2026-04"},
+  {plot:"H138",name:"คุณธนายุทธ กล้าหาญ",area:22.8,monthly:342.0,plot_num:138,type:"H",transfer_date:"2024-02-19",last_paid:"2026-03"},
+  {plot:"H139",name:"คุณจารุวรรณ สุขคำเมล์",area:22.8,monthly:342.0,plot_num:139,type:"H",transfer_date:"2024-03-12",last_paid:"2026-04"},
+  {plot:"H140",name:"นางสาววิลาสินี คนคล่อง",area:22.8,monthly:342.0,plot_num:140,type:"H",transfer_date:"2024-03-25",last_paid:"2026-03"},
+  {plot:"H141",name:"นางสาวพิกุล ยอดไม้",area:23.9,monthly:358.5,plot_num:141,type:"H",transfer_date:"2024-06-13",last_paid:"2026-05"}
+];
+
+async function loadAllData() {
+  const rdEl = document.getElementById('r-date');
+  if (rdEl) rdEl.value = new Date().toISOString().split('T')[0];
+  showLoading();
+  try {
+    // โหลดลูกค้า — ถ้าว่างให้ใส่ข้อมูลเริ่มต้น
+    let custs = await sbGet('customers');
+    if (!custs || custs.length === 0) {
+      toast('กำลังใส่ข้อมูลเริ่มต้น...', 'amber');
+      await sbUpsert('customers', DEF_CUST);
+      custs = await sbGet('customers');
+    }
+    CUST = custs.map(c => ({
+      ...c,
+      area: parseFloat(c.area) || 0,
+      monthly: parseFloat(c.monthly) || 0,
+      plot_num: parseInt(c.plot_num) || 0
+    }));
+    LU = {}; CUST.forEach(c => LU[c.plot] = c);
+
+    // โหลด transactions
+    const txns = await sbGet('transactions', 'order=ts.asc&limit=1000');
+    TXN = (txns || []).map(t => ({
+      ...t,
+      total: parseFloat(t.total) || 0,
+      year: parseInt(t.year) || 2569,
+      sortedMonths: Array.isArray(t.sorted_months) ? t.sorted_months : [],
+      ts: parseInt(t.ts) || 0
+    }));
+    PAID = {};
+    TXN.forEach(t => { if (!PAID[t.plot] || t.ts > (PAID[t.plot].ts || 0)) PAID[t.plot] = t; });
+
+    // โหลด inv_sent
+    const invs = await sbGet('inv_sent');
+    INV_SENT = {};
+    (invs || []).forEach(i => { INV_SENT[i.plot] = { date: i.sent_date }; });
+
+    OWE = computeOwe(CUST, PAID);
+    renderDash(); renderSummary();
+    console.log('✅ Loaded:', CUST.length, 'customers,', TXN.length, 'txns');
+  } catch(e) {
+    console.error('loadAllData error:', e);
+    alert('โหลดข้อมูลไม่ได้: ' + e.message);
+  } finally {
+    hideLoading();
+  }
+}
+
+/* ════ SAVE FUNCTIONS ════ */
+function savePaid() { OWE = computeOwe(CUST, PAID); }
+function saveInv() {}
+function saveTxn() {}
+
+async function saveTransaction() {
+  if (!currentReceiptData) { alert('กรุณาออกใบเสร็จก่อน'); return; }
+  const d = currentReceiptData;
+  const mStr = d.sorted.map(m => MF[m] + ' ' + d.year).join(', ');
+  const ts = Date.now();
+  showLoading();
+  try {
+    await sbInsert('transactions', {
+      plot: d.plot, name: d.c.name, num: d.num, date: d.date,
+      months: mStr, sorted_months: d.sorted,
+      total: d.total, ptype: d.ptype, year: d.year, ts: ts
+    });
+    // อัปเดต last_paid
+    const lastM = Math.max(...d.sorted);
+    const lp = (d.year - 543) + '-' + String(lastM).padStart(2, '0');
+    await sbUpdate('customers', 'plot=eq.' + d.plot, { last_paid: lp });
+
+    const txn = { plot: d.plot, name: d.c.name, num: d.num, date: d.date,
+      months: mStr, sortedMonths: d.sorted, total: d.total, ptype: d.ptype, year: d.year, ts: ts };
+    TXN.push(txn); PAID[d.plot] = { ...txn };
+    const ci = CUST.findIndex(x => x.plot === d.plot);
+    if (ci >= 0) { CUST[ci].last_paid = lp; LU[d.plot] = CUST[ci]; }
+    OWE = computeOwe(CUST, PAID);
+    renderDash(); renderInvoice();
+    toast('✅ บันทึกแล้ว — แปลง ' + d.plot + ' | ' + fmt(d.total) + ' บาท');
+    const sEl = document.getElementById('s-done');
+    if (sEl) sEl.textContent = Object.keys(PAID).length;
+  } catch(e) { toast('❌ ' + e.message, 'red'); }
+  finally { hideLoading(); }
+}
+
+async function markInvoiceSent() {
+  if (!currentInvPlot) return;
+  const dt = new Date().toISOString().split('T')[0];
+  showLoading();
+  try {
+    await sbUpsert('inv_sent', { plot: currentInvPlot, sent_date: dt });
+    INV_SENT[currentInvPlot] = { date: dt };
+    renderDash(); renderInvoice();
+    toast('✓ บันทึกส่งใบแจ้งหนี้ แปลง ' + currentInvPlot);
+    closeModal();
+  } catch(e) { toast('❌ ' + e.message, 'red'); }
+  finally { hideLoading(); }
+}
+
+async function deleteTxn(ts) {
+  if (!confirm('ลบรายการนี้?')) return;
+  const t = TXN.find(function(x){ return x.ts === ts; });
+  if (!t) return;
+  showLoading();
+  try {
+    await sbDelete('transactions', 'ts=eq.' + t.ts);
+    TXN = TXN.filter(x => x.ts !== t.ts);
+    if (PAID[t.plot] && PAID[t.plot].ts === t.ts) {
+      const rem = TXN.filter(x => x.plot === t.plot).sort((a,b) => b.ts - a.ts);
+      if (rem.length > 0) PAID[t.plot] = rem[0];
+      else delete PAID[t.plot];
+    }
+
+    // คำนวณ last_paid ใหม่ = เดือนก่อนเดือนแรกของใบเสร็จที่ลบ
+    // เช่น ลบ เม.ย. → last_paid = มี.ค. (เดือนก่อน min ของ sortedMonths)
+    const deletedMonths = t.sortedMonths || [];
+    const deletedYear = t.year - 543; // CE
+    if (deletedMonths.length > 0) {
+      const minDeletedM = Math.min.apply(null, deletedMonths);
+      // เดือนก่อนหน้า minDeleted
+      const prevM = minDeletedM === 1 ? 12 : minDeletedM - 1;
+      const prevY = minDeletedM === 1 ? deletedYear - 1 : deletedYear;
+      const newLastPaid = prevY + '-' + String(prevM).padStart(2, '0');
+
+      // อัปเดตเฉพาะถ้า newLastPaid น้อยกว่า last_paid ปัจจุบัน
+      // (เพื่อไม่ให้ย้อนกลับไปมากกว่าที่ควร)
+      const cu = LU[t.plot];
+      const currentLp = cu ? (cu.last_paid || '') : '';
+      if (!currentLp || newLastPaid < currentLp) {
+        await sbUpdate('customers', 'plot=eq.' + t.plot, {last_paid: newLastPaid});
+        const ci = CUST.findIndex(x => x.plot === t.plot);
+        if (ci >= 0) { CUST[ci].last_paid = newLastPaid; LU[t.plot] = CUST[ci]; }
+      }
+    }
+
+    OWE = computeOwe(CUST, PAID);
+    renderLog(); renderDash();
+    toast('ลบรายการแล้ว', 'amber');
+  } catch(e) { toast('❌ ' + e.message, 'red'); }
+  finally { hideLoading(); }
+}
+
+async function clearLog() {
+  if (!confirm('ลบประวัติทั้งหมด?')) return;
+  showLoading();
+  try {
+    await sbDelete('transactions', 'id=gte.0');
+    TXN = []; PAID = {}; INV_SENT = {};
+    OWE = computeOwe(CUST, PAID);
+    renderLog(); renderDash();
+    toast('ล้างประวัติแล้ว', 'amber');
+  } catch(e) { toast('❌ ' + e.message, 'red'); }
+  finally { hideLoading(); }
+}
+
+async function saveEditPlot(){
+  var p = document.getElementById('edit-plot').value.toUpperCase().trim();
+  if(!p){ alert('กรุณาระบุเลขแปลง'); return; }
+  var name = document.getElementById('edit-name').value.trim();
+  var area = parseFloat(document.getElementById('edit-area').value)||0;
+  var xdate = document.getElementById('edit-xdate').value||null;
+  var lp = document.getElementById('edit-lp').value||null;
+  var typeEl = document.getElementById('edit-type');
+  var ptype = typeEl ? typeEl.value : p.match(/^([ABH])/)?.[0]||'A';
+  if(!name||!area){ alert('กรุณากรอกชื่อและเนื้อที่'); return; }
+  var monthly = +(area*CFG.rate).toFixed(1);
+  var pnum = parseInt(p.replace(/[ABH]/,''))||0;
+  var isNew = !LU[p];
+  showLoading();
+  try{
+    if(isNew){
+      // INSERT แปลงใหม่
+      await sbInsert('customers',{
+        plot:p, name:name, area:area, monthly:monthly,
+        plot_num:pnum, type:ptype,
+        transfer_date:xdate, last_paid:lp
+      });
+      var newCu = {plot:p,name:name,area:area,monthly:monthly,
+        plot_num:pnum,type:ptype,transfer_date:xdate,last_paid:lp};
+      CUST.push(newCu);
+      LU[p] = newCu;
+      toast('✅ เพิ่มแปลง '+p+' เรียบร้อยแล้ว');
+    } else {
+      // UPDATE แปลงเดิม
+      await sbUpdate('customers','plot=eq.'+p,{
+        name:name, area:area, monthly:monthly,
+        transfer_date:xdate, last_paid:lp
+      });
+      LU[p].name=name; LU[p].area=area; LU[p].monthly=monthly;
+      LU[p].transfer_date=xdate; LU[p].last_paid=lp;
+      var ci=CUST.findIndex(function(x){return x.plot===p;});
+      if(ci>=0) CUST[ci]=LU[p];
+      toast('✅ บันทึกแปลง '+p+' เรียบร้อยแล้ว');
+    }
+    OWE=computeOwe(CUST,PAID); renderDash();
+    document.getElementById('edit-form').style.display='none';
+    document.getElementById('edit-plot').value='';
+    var badge=document.getElementById('edit-new-badge');
+    if(badge) badge.style.display='none';
+    var msgEl=document.getElementById('edit-msg');
+    if(msgEl) msgEl.innerHTML='';
+  }catch(e){
+    var msgEl=document.getElementById('edit-msg');
+    if(msgEl) msgEl.innerHTML='<div class="alert danger">❌ '+e.message+'</div>';
+  }finally{ hideLoading(); }
+}
+
+function clearCustOverrides() { alert('แก้ไขข้อมูลได้ตรงใน Supabase Dashboard ครับ'); }
+function updateOverrideCount() {
+  const el = document.getElementById('override-count');
+  if (el) el.textContent = 'ข้อมูลเก็บใน Supabase — sync ทุกเครื่อง ✅';
+}
+
+
+/* ════════════════════════════════════════
+   PURE JS XLSX WRITER (ไม่ต้อง CDN)
+   ════════════════════════════════════════ */
+const XW=(function(){
+  const CRC=(()=>{const t=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=c&1?(0xEDB88320^(c>>>1)):(c>>>1);t[i]=c;}return t;})();
+  function crc32(d){let c=0xFFFFFFFF;const t=new Uint8Array(d);for(let i=0;i<t.length;i++)c=(c>>>8)^CRC[(c^t[i])&0xFF];return(c^0xFFFFFFFF)>>>0;}
+  function u16(v){const b=new Uint8Array(2);new DataView(b.buffer).setUint16(0,v,true);return b;}
+  function u32(v){const b=new Uint8Array(4);new DataView(b.buffer).setUint32(0,v,true);return b;}
+  function cat(a){const n=a.reduce((s,x)=>s+x.length,0),o=new Uint8Array(n);let p=0;a.forEach(x=>{o.set(x,p);p+=x.length;});return o;}
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function col(n){let s='';n++;while(n>0){s=String.fromCharCode(64+(n%26||26))+s;n=Math.floor((n-1)/26);}return s;}
+
+  function zip(files){
+    const enc=new TextEncoder(),parts=[],hdrs=[];let off=0;
+    files.forEach(({name,data})=>{
+      const nb=enc.encode(name),db=typeof data==='string'?enc.encode(data):data;
+      const crc=crc32(db);
+      const lh=cat([new Uint8Array([0x50,0x4B,3,4]),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(db.length),u32(db.length),u16(nb.length),u16(0),nb]);
+      hdrs.push({nb,crc,size:db.length,off});parts.push(lh,db);off+=lh.length+db.length;
+    });
+    const cdoff=off;
+    const cdp=hdrs.map(({nb,crc,size,off})=>cat([new Uint8Array([0x50,0x4B,1,2]),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(size),u32(size),u16(nb.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(off),nb]));
+    const cd=cat(cdp);
+    const eocd=cat([new Uint8Array([0x50,0x4B,5,6]),u16(0),u16(0),u16(hdrs.length),u16(hdrs.length),u32(cd.length),u32(cdoff),u16(0)]);
+    return cat([...parts,cd,eocd]);
+  }
+
+  function ssData(sheets){const map={},arr=[];sheets.forEach(s=>s.rows.forEach(r=>(r||[]).forEach(c=>{if(c!==null&&c!==undefined&&typeof c==='string'&&c!==''){if(!(c in map)){map[c]=arr.length;arr.push(c);}}})));return{map,arr};}
+
+  function sheetXML(rows,ssMap){
+    let x='<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols><col min="1" max="1" width="10" customWidth="1"/><col min="2" max="2" width="28" customWidth="1"/><col min="3" max="8" width="16" customWidth="1"/></cols><sheetData>';
+    (rows||[]).forEach((row,ri)=>{
+      if(!row||!row.length)return;
+      x+=`<row r="${ri+1}">`;
+      row.forEach((cell,ci)=>{
+        const addr=col(ci)+(ri+1);
+        if(cell===null||cell===undefined||cell==='')return;
+        if(typeof cell==='number'){x+=`<c r="${addr}"><v>${cell}</v></c>`;}
+        else{var _si2=(ssMap[cell]!==undefined)?ssMap[cell]:0;var si=_si2;x+=`<c r="${addr}" t="s"><v>${si}</v></c>`;}
+      });
+      x+='</row>';
+    });
+    return x+'</sheetData></worksheet>';
+  }
+
+  return{
+    dl(filename,sheets){
+      const ss=ssData(sheets);
+      const ssXML=`<?xml version="1.0" encoding="UTF-8"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${ss.arr.length}" uniqueCount="${ss.arr.length}">${ss.arr.map(s=>`<si><t xml:space="preserve">${esc(s)}</t></si>`).join('')}</sst>`;
+      const stXML=`<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>`;
+      const wbXML=`<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s,i)=>`<sheet name="${esc(s.name)}" sheetId="${i+1}" r:id="rId${i+2}"/>`).join('')}</sheets></workbook>`;
+      const wbRels=`<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId${sheets.length+2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>${sheets.map((s,i)=>`<Relationship Id="rId${i+2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('')}</Relationships>`;
+      const ct=`<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>${sheets.map((s,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>`;
+      const rr=`<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
+      const files=[{name:'[Content_Types].xml',data:ct},{name:'_rels/.rels',data:rr},{name:'xl/workbook.xml',data:wbXML},{name:'xl/_rels/workbook.xml.rels',data:wbRels},{name:'xl/styles.xml',data:stXML},{name:'xl/sharedStrings.xml',data:ssXML},...sheets.map((s,i)=>({name:`xl/worksheets/sheet${i+1}.xml`,data:sheetXML(s.rows,ss.map)}))];
+      const blob=new Blob([zip(files)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+    }
+  };
+})();
+
+/* ════════════════════════════════════════
+   DATA — อ่านจาก Excel จริง (transfer_date=วันโอน, last_paid=เดือนสุดท้ายที่จ่าย)
+   ════════════════════════════════════════ */
+
+/* ════ computeOwe — คำนวณแปลงที่ต้องเรียกเก็บ ════
+   Logic:
+   1. แปลงต้องมี transfer_date (โอนแล้ว)
+   2. นับจาก transfer_date ครบ 24 เดือนแล้ว (หมดสิทธิ์จ่ายล่วงหน้า)
+   3. เรียกเก็บล่วงหน้า 1 เดือน (เดือนถัดจากเดือนปัจจุบัน)
+   4. ถ้ามีเดือนค้างก่อนหน้า ให้รวมทั้งหมด
+*/
+function addMonths(date,n){const d=new Date(date);d.setMonth(d.getMonth()+n);return d;}
+function ymStr(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
+
+function computeOwe(custList,paidMap){
+  const today=new Date();
+  // วันที่ 15 = เริ่มเรียกเก็บรอบถัดไป
+  const billingDay=15;
+  const offset=today.getDate()>=billingDay?1:0;
+  const billMonth=new Date(today.getFullYear(),today.getMonth()+offset,1);
+
+  const owe={};
+  custList.forEach(c=>{
+    if(!c.transfer_date)return;
+    if(!c.area||c.area<=0)return; // skip แปลงที่รวมกลุ่ม (area=0)
+
+    const transferDate=new Date(c.transfer_date);
+    // ถ้าโอนก่อนวันที่ 15 → นับเดือนที่โอนเลย, ถ้าวันที่ 15+ → นับเดือนถัดไป
+    const startMonth=transferDate.getDate()<=15
+      ?new Date(transferDate.getFullYear(),transferDate.getMonth(),1)
+      :new Date(transferDate.getFullYear(),transferDate.getMonth()+1,1);
+    const endPrepaid=new Date(addMonths(startMonth,24).getFullYear(),addMonths(startMonth,24).getMonth(),1);
+
+    // ยังอยู่ใน prepaid → ไม่เรียกเก็บ (ถ้าครบพอดีเดือนนี้ = เริ่มเรียกได้)
+    if(billMonth<endPrepaid)return;
+
+    // เดือนแรกที่ต้องเรียกเก็บ = endPrepaid เอง
+    const firstBill=new Date(endPrepaid.getFullYear(),endPrepaid.getMonth(),1);
+
+    // หา startFrom:
+    // 1. ถ้ามี last_paid จาก Excel → ต่อจากเดือนนั้น
+    // 2. ถ้า PAID จาก localStorage มีข้อมูลใหม่กว่า → ใช้อันใหม่กว่า
+    let startFrom=new Date(firstBill);
+
+    // last_paid จาก Excel data (format "YYYY-MM")
+    if(c.last_paid){
+      const [ly,lm]=c.last_paid.split('-').map(Number);
+      const lpDate=new Date(ly,lm-1,1); // first of that month
+      const nextAfterLp=new Date(ly,lm,1); // first of next month
+      if(nextAfterLp>startFrom) startFrom=new Date(nextAfterLp);
+    }
+
+    // PAID จากระบบ (sortedMonths) อาจใหม่กว่า last_paid
+    const paid=paidMap[c.plot];
+    if(paid&&paid.year){
+      // รองรับทั้ง sortedMonths และ months
+      const paidMonths=paid.sortedMonths||paid.months||[];
+      if(paidMonths.length>0){
+        const lastM=Math.max.apply(null,paidMonths);
+        const lastPaidDate=new Date(paid.year-543,lastM,1);
+        if(lastPaidDate>startFrom) startFrom=new Date(lastPaidDate);
+      }
+    }
+
+    const owedMonths=[];
+    let cur=new Date(startFrom);
+    while(cur<=billMonth){
+      owedMonths.push(ymStr(cur));
+      cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);
+    }
+    if(!owedMonths.length)return;
+    owe[c.plot]={
+      months:owedMonths.length,
+      total:+(c.monthly*owedMonths.length).toFixed(1),
+      owed_months:owedMonths,
+      transfer_date:c.transfer_date,
+      end_prepaid:ymStr(endPrepaid)
+    };
+  });
+  return owe;
+}
+
+function computeOweCustom(custList,paidMap,customBillMonth){
+  var billMonth=customBillMonth||new Date();
+
+  const owe={};
+  custList.forEach(c=>{
+    if(!c.transfer_date)return;
+    if(!c.area||c.area<=0)return; // skip แปลงที่รวมกลุ่ม (area=0)
+
+    const transferDate=new Date(c.transfer_date);
+    // ถ้าโอนก่อนวันที่ 15 → นับเดือนที่โอนเลย, ถ้าวันที่ 15+ → นับเดือนถัดไป
+    const startMonth=transferDate.getDate()<=15
+      ?new Date(transferDate.getFullYear(),transferDate.getMonth(),1)
+      :new Date(transferDate.getFullYear(),transferDate.getMonth()+1,1);
+    const endPrepaid=new Date(addMonths(startMonth,24).getFullYear(),addMonths(startMonth,24).getMonth(),1);
+
+    // ยังอยู่ใน prepaid → ไม่เรียกเก็บ (ถ้าครบพอดีเดือนนี้ = เริ่มเรียกได้)
+    if(billMonth<endPrepaid)return;
+
+    // เดือนแรกที่ต้องเรียกเก็บ = endPrepaid เอง
+    const firstBill=new Date(endPrepaid.getFullYear(),endPrepaid.getMonth(),1);
+
+    // หา startFrom:
+    // 1. ถ้ามี last_paid จาก Excel → ต่อจากเดือนนั้น
+    // 2. ถ้า PAID จาก localStorage มีข้อมูลใหม่กว่า → ใช้อันใหม่กว่า
+    let startFrom=new Date(firstBill);
+
+    // last_paid จาก Excel data (format "YYYY-MM")
+    if(c.last_paid){
+      const [ly,lm]=c.last_paid.split('-').map(Number);
+      const lpDate=new Date(ly,lm-1,1); // first of that month
+      const nextAfterLp=new Date(ly,lm,1); // first of next month
+      if(nextAfterLp>startFrom) startFrom=new Date(nextAfterLp);
+    }
+
+    // PAID จากระบบ (sortedMonths) อาจใหม่กว่า last_paid
+    const paid=paidMap[c.plot];
+    if(paid&&paid.year){
+      // รองรับทั้ง sortedMonths และ months
+      const paidMonths=paid.sortedMonths||paid.months||[];
+      if(paidMonths.length>0){
+        const lastM=Math.max.apply(null,paidMonths);
+        const lastPaidDate=new Date(paid.year-543,lastM,1);
+        if(lastPaidDate>startFrom) startFrom=new Date(lastPaidDate);
+      }
+    }
+
+    const owedMonths=[];
+    let cur=new Date(startFrom);
+    while(cur<=billMonth){
+      owedMonths.push(ymStr(cur));
+      cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);
+    }
+    if(!owedMonths.length)return;
+    owe[c.plot]={
+      months:owedMonths.length,
+      total:+(c.monthly*owedMonths.length).toFixed(1),
+      owed_months:owedMonths,
+      transfer_date:c.transfer_date,
+      end_prepaid:ymStr(endPrepaid)
+    };
+  });
+  return owe;
+}
+
+/* ════ STATE ════ */
+CUST.forEach(c=>LU[c.plot]=c);
+// โหลด override ที่ user แก้ไขไว้
+// คำนวณ OWE จาก logic ใหม่ทุกครั้งที่โหลด
+
+
+
+
+
+
+
+
+
+
+/* ── STATUS HELPER ── แสดงสถานะเดียวที่ล่าสุด */
+function getStatus(plot){
+  if(PAID[plot]) return {label:'ออกใบเสร็จแล้ว',cls:'teal',priority:3};
+  if(INV_SENT[plot]) return {label:'ออกใบแจ้งหนี้แล้ว',cls:'purple',priority:2};
+  return {label:'ค้างชำระ',cls:'danger',priority:1};
+}
+function statusBadge(plot){const s=getStatus(plot);return `<span class="badge ${s.cls}">${s.label}</span>`;}
+function prepaidBadge(cust){
+  if(!cust.transfer_date)return '<span class="badge neutral">ยังไม่โอน</span>';
+  const ep=addMonths(new Date(cust.transfer_date),24);
+  const epStr=ep.toLocaleDateString('th-TH',{month:'short',year:'numeric'});
+  return `<span class="badge blue" title="วันโอน: ${cust.transfer_date}">จ่ายล่วงหน้าถึง ${epStr}</span>`;
+}
+
+/* ── BAHT WORDS ── */
+function bahtWords(n){
+  const ones=['','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'];
+  const pos=['','สิบ','ร้อย','พัน','หมื่น','แสน','ล้าน'];
+  function w(x){if(!x)return'ศูนย์';let r='';const s=String(Math.floor(x)),l=s.length;
+    for(let i=0;i<l;i++){const d=+s[i],p=l-i-1;if(!d)continue;
+      if(p===1&&d===1)r+='สิบ';else if(p===1&&d===2)r+='ยี่สิบ';
+      else if(p===1)r+=ones[d]+'สิบ';else if(p===0&&d===1&&l>1)r+='เอ็ด';
+      else r+=ones[d]+pos[p];}return r;}
+  const b=Math.floor(n),s=Math.round((n-b)*100);
+  return w(b)+'บาท'+(s?w(s)+'สตางค์':'ถ้วน');
+}
+
+/* ── NAV ── */
+function navTo(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');el.classList.add('active');
+  if(id==='invoice')renderInvoice();
+  if(id==='customers')renderCustomers();
+  if(id==='log')renderLog();
+  if(id==='settings')renderSummary();
+}
+function goReceipt(plot){
+  document.querySelectorAll('.nav-tab')[2].click();
+  setTimeout(()=>{document.getElementById('r-plot').value=plot;plotLookup(plot);},80);
+}
+
+/* ── INVOICE MODAL ── */
+function getInvIssueDate(){
+  // ดึงวันที่ออกใบแจ้งหนี้จาก global picker หรือ default = 15 ของเดือนก่อนหน้า
+  var gPicker = document.getElementById('inv-global-date');
+  var _n = new Date();
+  if(gPicker && gPicker.value){
+    var parts = gPicker.value.split('-');
+    return new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+  }
+  return new Date(_n.getFullYear(), _n.getMonth()-1, 15);
+}
+
+function openInvModal(plot){
+  currentInvPlot=plot;
+  const c=LU[plot],o=OWE[plot];if(!c||!o)return;
+  document.getElementById('inv-modal').style.display='block';
+  refreshInvModal();
+}
+
+function refreshInvModal(){
+  const plot=currentInvPlot; if(!plot) return;
+  const c=LU[plot],o=OWE[plot]; if(!c||!o) return;
+  var issueDate = getInvIssueDate();
+  const _ivDTh=issueDate.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+  // ครบกำหนด = สิ้นเดือนเดียวกับวันที่ออกใบ เช่น ออก 16 เม.ย. → ครบ 30 เม.ย.
+  const _dueD=new Date(issueDate.getFullYear(),issueDate.getMonth()+1,0);
+  const _dueTh=_dueD.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+  const billM=issueDate.getMonth()+1;
+  const billY=issueDate.getFullYear()+543;
+  const ivNum='IV-SSKK-'+String(billM).padStart(2,'0')+billY+'-'+String(c.plot_num).padStart(3,'0');
+  document.getElementById('inv-modal-content').innerHTML=buildInvHTML(plot,c,o,ivNum,_ivDTh,_dueTh);
+}
+function closeModal(){document.getElementById('inv-modal').style.display='none';}
+
+
+function buildInvHTML(plot,c,o,ivNum,today,dueTh){
+  return`<div class="doc-wrap" id="inv-doc">
+  <div style="display:flex;align-items:center;gap:16px;padding:12px 20px 10px"><img src="data:image/jpeg;base64,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" style="width:120px;height:120px;object-fit:contain;flex-shrink:0"><div style="flex:1;text-align:center"><div style="font-size:17px;font-weight:700">บริษัท สุข เอสเตท ดีเวลล็อปเม้นท์ จำกัด (สำนักงานใหญ่)</div><div style="font-size:12.5px;font-weight:600;color:#333;margin-top:1px">SOOK ESTATE DEVELOPMENT CO.,LTD.</div><div style="font-size:12.5px;color:#444;margin-top:2px">ที่อยู่ : 40/2 ม.4 ต.ห้วยขมิ้น อ.หนองแค จ.สระบุรี</div><div style="font-size:12.5px;color:#444">โทร. 096-9824242 &nbsp;&nbsp; เลขประจำตัวผู้เสียภาษีอากร 0195559001405</div></div></div><div style="border-top:2px solid #111"></div><div style="text-align:center;padding:7px 20px 8px;background:#fafafa"><div style="font-size:16px;font-weight:700;letter-spacing:2px;color:#b91c1c">ใบแจ้งยอดชำระค่าส่วนกลาง</div><div style="font-size:13px;font-weight:600;color:#555">โครงการบ้านแสนสุข แก่งคอย</div></div><div style="border-bottom:2px solid #111"></div>
+  <div class="iv-tbl-hd"><div style="flex:1">รายละเอียด</div><div style="width:150px;text-align:right">จำนวนเงิน</div></div>
+  <div style="display:flex;justify-content:space-between;padding:6px 20px 4px;font-size:13px;color:#444;border-bottom:1px solid #e5e7eb;margin-bottom:4px">
+    <div>เลขที่ใบแจ้งหนี้: <strong>${ivNum}</strong></div>
+    <div style="display:flex;gap:16px">
+      <span>วันที่ออก: <strong>${today}</strong></span>
+      <span>ครบกำหนด: <strong>${dueTh}</strong></span>
+    </div>
+  </div>
+  <div class="iv-tbl-row">
+    <div class="iv-detail">
+      <div><strong>แปลง ${plot}</strong> &nbsp; ${c.name}</div>
+      <div style="font-size:12.5px;color:#555">เนื้อที่ดิน ${c.area} ตารางวา × ${CFG.rate} บาท/ตร.ว = ${fmt(c.monthly)} บาท/เดือน × ${o.months} เดือน</div>
+      <div style="font-size:12.5px;color:#666">${o.owed_months.map(ym=>fmtYM(ym)).join(', ')}</div>
+    </div>
+    <div class="iv-amt">${fmt(o.total)}</div>
+  </div>
+  ${o.months>1?`<div class="iv-tbl-row" style="background:#fff8f0"><div class="iv-detail" style="padding-left:24px;color:#b45309;font-weight:600">*** ค้างชำระ ${o.months} เดือน ***</div><div class="iv-amt"></div></div>`:''}
+  <div class="iv-words">( — ${bahtWords(o.total)} — )</div>
+  <div class="iv-total"><span>ยอดรวมสุทธิ</span><span style="color:#b91c1c">${fmt(o.total)} บาท</span></div>
+  <div class="iv-bank">
+    <div style="font-weight:600;margin-bottom:4px">ช่องทางการชำระ</div>
+    <div>โอนชำระผ่านบัญชีธนาคารไทยพาณิชย์เลขที่ 726-226744-0</div>
+    <div>ชื่อบัญชี นายศิระ วงษ์มานะสุข</div>
+  </div>
+  <div class="iv-note">*** หากชำระแล้ว กรุณาส่งหลักฐานผ่าน LINE : @971teaha</div>
+  <div class="iv-regards"><div>ขอแสดงความนับถือ</div><div style="font-weight:600">โครงการบ้านแสนสุข แก่งคอย</div><div>บริษัท สุข เอสเตท ดีเวลล็อปเม้นท์ จำกัด</div></div>
+</div>`;
+}
+
+/* ── DASHBOARD ── */
+function renderDash(){
+  const oKeys=Object.keys(OWE);
+  const debt=oKeys.reduce((s,k)=>s+OWE[k].total,0);
+  document.getElementById('s-total').textContent=CUST.length;
+  document.getElementById('s-owe').textContent=oKeys.length;
+  document.getElementById('s-debt').textContent=debt.toLocaleString('th-TH',{maximumFractionDigits:0});
+  document.getElementById('s-done').textContent=Object.keys(PAID).length;
+  const today2=new Date();
+  const offset2=today2.getDate()>=15?1:0;
+  const billM2=new Date(today2.getFullYear(),today2.getMonth()+offset2,1);
+  const billMName=MF[billM2.getMonth()+1]||MN[billM2.getMonth()+1];
+  document.getElementById('dash-sub').textContent=`รอบบิล: ${billMName} ${billM2.getFullYear()+543} | เรียกเก็บตั้งแต่วันที่ 15 | ${CFG.rate} บาท/ตร.ว`;
+  const sorted=[...oKeys].sort((a,b)=>OWE[b].total-OWE[a].total);
+  document.getElementById('dash-body').innerHTML=sorted.map(k=>{
+    const o=OWE[k],c=LU[k];
+    const months=o.owed_months.map(ym=>fmtYM(ym)).join(', ');
+    return`<tr>
+      <td><strong>${k}</strong></td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c?c.name:'-'}</td>
+      <td><span class="badge ${o.months>=3?'danger':o.months>=2?'warning':'neutral'}">${o.months} เดือน</span></td>
+      <td style="font-weight:700;color:var(--red)">${fmt(o.total)} ฿</td>
+      <td style="font-size:12px;color:var(--text3)">${months}</td>
+
+      <td><div style="display:flex;gap:5px">
+        <button class="btn sm" onclick="openInvModal('${k}')">ใบแจ้งหนี้</button>
+        <button class="btn success sm" onclick="goReceipt('${k}')">ใบเสร็จ</button>
+      </div></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="7" class="empty">ไม่มีข้อมูล</td></tr>';
+}
+
+/* ── INVOICE ── */
+function renderInvoice(){
+  var q=(document.getElementById('inv-q').value||'').toLowerCase();
+  var sort=document.getElementById('inv-sort').value;
+  var mf=parseInt(document.getElementById('inv-months').value)||0;
+
+  // เติม dropdown ปี (3 ปีย้อนหลัง + 3 ปีข้างหน้า)
+  var now = new Date();
+  var yrSel = document.getElementById('inv-bill-year');
+  var monSel = document.getElementById('inv-bill-mon');
+  if(yrSel){
+    var curYrVal = yrSel.value;
+    var yOpts = '<option value="">ปีนี้ ('+(now.getFullYear()+543)+')</option>';
+    for(var yi=-1; yi<=3; yi++){
+      var ye = now.getFullYear()+yi;
+      var yeTh = ye+543;
+      yOpts += '<option value="'+ye+'" '+(String(ye)===curYrVal?'selected':'')+'>'+yeTh+'</option>';
+    }
+    yrSel.innerHTML = yOpts;
+    yrSel.value = curYrVal;
+  }
+  // เติม dropdown เดือน (ม.ค.-ธ.ค.)
+  if(monSel){
+    var curMonVal = monSel.value;
+    var MNS = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    var mOpts = '<option value="">เดือนนี้ ('+MNS[now.getMonth()+1]+')</option>';
+    for(var mi=1; mi<=12; mi++){
+      mOpts += '<option value="'+mi+'" '+(String(mi)===curMonVal?'selected':'')+'>'+MNS[mi]+'</option>';
+    }
+    monSel.innerHTML = mOpts;
+    monSel.value = curMonVal;
+  }
+
+  // คำนวณ billMonth จากปีและเดือนที่เลือก
+  var selYear = yrSel && yrSel.value ? parseInt(yrSel.value) : now.getFullYear();
+  var selMon = monSel && monSel.value ? parseInt(monSel.value)-1 : now.getMonth();
+  var isCustom = (yrSel && yrSel.value) || (monSel && monSel.value);
+  var selectedBM = isCustom ? (selYear+'-'+String(selMon+1).padStart(2,'0')) : '';
+  var oweToUse;
+  if(selectedBM){
+    var bParts = selectedBM.split('-');
+    var customBillMonth = new Date(parseInt(bParts[0]), parseInt(bParts[1])-1, 1);
+    oweToUse = computeOweCustom(CUST, PAID, customBillMonth);
+  } else {
+    oweToUse = OWE;
+  }
+
+  var rows=Object.entries(oweToUse).filter(function(e){
+    var k=e[0],o=e[1];
+    var cu=LU[k];
+    return(!q||k.toLowerCase().includes(q)||(cu&&cu.name.toLowerCase().includes(q)))
+        &&(!mf||o.months>=mf);
+  });
+  var typeOrd={'A':0,'B':1,'H':2};
+  if(sort==='total-desc') rows.sort(function(a,b){return b[1].total-a[1].total;});
+  else if(sort==='total-asc') rows.sort(function(a,b){return a[1].total-b[1].total;});
+  else if(sort==='months-desc') rows.sort(function(a,b){return b[1].months-a[1].months;});
+  else {
+    // เรียงตามเลขแปลงน้อยไปมาก ไม่สน type
+    rows.sort(function(a,b){
+      var ca=LU[a[0]], cb2=LU[b[0]];
+      return ((ca&&ca.plot_num)||0)-((cb2&&cb2.plot_num)||0);
+    });
+  }
+  document.getElementById('inv-body').innerHTML=rows.map(([k,o])=>{
+    const cu=LU[k];
+    const months=o.owed_months.map(ym=>fmtYM(ym)).join(', ');
+    const mBadge=o.months>=3
+      ?`<span class="badge danger">${o.months} เดือน</span>`
+      :`<span class="badge warning">${o.months} เดือน</span>`;
+    return`<tr>
+      <td><strong>${k}</strong></td>
+      <td>${cu?cu.name:'-'}</td>
+      <td style="text-align:right">${mBadge}</td>
+      <td style="text-align:right;font-weight:600;color:${o.months>=3?'var(--red)':'var(--text)'}">${fmt(o.total)}</td>
+      <td style="font-size:12px;color:var(--text3)">${months}</td>
+      <td><button class="btn sm" onclick="openInvModal('${k}')">ใบแจ้งหนี้</button></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="6" class="empty">ไม่พบ</td></tr>';
+
+}
+
+/* ── CUSTOMERS ── */
+function renderCustomers(){
+  const q=(document.getElementById('c-q').value||'').toLowerCase();
+  const tf=document.getElementById('c-type').value;
+  const sf=document.getElementById('c-sf').value;
+  const sortEl=document.getElementById('c-sort');
+  const sortBy=sortEl?sortEl.value:'plot';
+  const rows=CUST.filter(c=>{
+    const isPrepaid=c.transfer_date&&!OWE[c.plot];
+    const isOwe=!!OWE[c.plot];
+    const noTrans=!c.transfer_date;
+    return(!q||c.plot.toLowerCase().includes(q)||c.name.toLowerCase().includes(q))
+        &&(!tf||c.type===tf)
+        &&(!sf
+          ||(sf==='owe'&&isOwe)
+          ||(sf==='prepaid'&&isPrepaid)
+          ||(sf==='notrans'&&noTrans));
+  });
+  // เรียงลำดับ
+  var typeOrder={A:0,B:1,H:2};
+  rows.sort(function(a,b){
+    if(sortBy==='num-asc') return (a.plot_num||0)-(b.plot_num||0);
+    if(sortBy==='num-desc') return (b.plot_num||0)-(a.plot_num||0);
+    // default: plot — เรียงตาม type แล้วตามเลข
+    var ta=typeOrder[a.type]||0,tb=typeOrder[b.type]||0;
+    if(ta!==tb) return ta-tb;
+    return (a.plot_num||0)-(b.plot_num||0);
+  });
+
+  document.getElementById('c-body').innerHTML=rows.map(c=>{
+    const o=OWE[c.plot];
+    let statusCell,actionCell;
+    if(!c.transfer_date){
+      // 1. ยังไม่โอน
+      statusCell='<span class="badge neutral">⚪ ยังไม่โอน</span>';
+      actionCell='';
+    } else if(!o){
+      // ไม่ค้าง
+      const ep=addMonths(new Date(c.transfer_date),24);
+      const now2=new Date();
+      const billM2=new Date(now2.getFullYear(),now2.getMonth()+(now2.getDate()>=15?1:0),1);
+      if(billM2<ep){
+        // 2. จ่ายล่วงหน้า — ยังอยู่ในช่วง 2 ปีแรก
+        const epStr=ep.toLocaleDateString('th-TH',{month:'short',year:'numeric'});
+        const startStr=new Date(c.transfer_date).toLocaleDateString('th-TH',{month:'short',year:'numeric'});
+        statusCell=`<span class="badge blue">🔵 จ่ายล่วงหน้า ${startStr}–${epStr}</span>`;
+        actionCell='';
+      } else {
+        // 3. ชำระแล้ว — พ้น 2 ปีและจ่ายทันทุกเดือน
+        var lpParts=(c.last_paid||'').split('-');
+        var lpM=parseInt(lpParts[1])||0;
+        var lpY=(parseInt(lpParts[0])||0)+543;
+        var lpStr=lpM?MN[lpM]+' '+lpY:'';
+        statusCell=`<span class="badge success">🟢 ชำระแล้ว${lpStr?' ถึง '+lpStr:''}</span>`;
+        actionCell=`<button class="btn success sm" onclick="goReceipt('${c.plot}')">ใบเสร็จ</button>`;
+      }
+    } else {
+      // ค้างชำระ — แยกตามจำนวนเดือน
+      var owedM=o.months||0;
+      if(owedM>=3){
+        statusCell=`<span class="badge danger">🔴 ค้าง ${owedM} เดือน</span>`;
+      } else {
+        statusCell=`<span class="badge warning">🟡 ค้าง ${owedM} เดือน</span>`;
+      }
+      actionCell=`<div style="display:flex;gap:5px">
+        <button class="btn sm" onclick="openInvModal('${c.plot}')">ใบแจ้งหนี้</button>
+        <button class="btn success sm" onclick="goReceipt('${c.plot}')">ใบเสร็จ</button>
+      </div>`;
+    }
+    return`<tr>
+      <td><strong>${c.plot}</strong></td><td>${c.name}</td>
+      <td>${c.area}</td><td>${fmt(c.monthly)} ฿</td>
+      <td>${statusCell}</td>
+      <td>${actionCell}</td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="6" class="empty">ไม่พบ</td></tr>';
+}
+
+/* ── LOG ── */
+function renderLog(){
+  var fromEl = document.getElementById('log-date-from');
+  var toEl = document.getElementById('log-date-to');
+  var fromVal = fromEl ? fromEl.value : '';
+  var toVal = toEl ? toEl.value : '';
+
+  // เรียง TXN ตามวันที่รับชำระล่าสุดก่อน (date desc, ts desc)
+  var sorted = TXN.slice().sort(function(a,b){
+    var da = a.date||''; var db = b.date||'';
+    if(db !== da) return db > da ? 1 : -1;
+    return (b.ts||0) - (a.ts||0);
+  });
+
+  // กรองตามช่วงวันที่
+  var filtered = sorted;
+  if(fromVal) filtered = filtered.filter(function(t){ return (t.date||'') >= fromVal; });
+  if(toVal)   filtered = filtered.filter(function(t){ return (t.date||'') <= toVal; });
+
+  document.getElementById('log-body').innerHTML = filtered.length
+    ? filtered.map(function(t){
+        // ใช้ ts เป็น key ในการหา index ใน TXN จริงๆ (ไม่ใช้ index จาก filtered)
+        return '<tr>'
+          +'<td><strong>'+t.plot+'</strong></td>'
+          +'<td style="color:var(--text2)">'+t.name+'</td>'
+          +'<td style="font-size:12px">'+t.num+'</td>'
+          +'<td style="font-size:12px">'+fmtDate(t.date)+'</td>'
+          +'<td style="font-size:12px;max-width:200px">'+t.months+'</td>'
+          +'<td style="font-weight:600;color:var(--blue)">'+fmt(t.total)+'</td>'
+          +'<td>'+(t.ptype||'-')+'</td>'
+          +'<td><button class="btn sm" onclick="reprintReceipt('+t.ts+')">🖨️</button></td>'
+          +'<td><button class="btn danger sm" onclick="deleteTxn('+t.ts+')">✕</button></td>'
+          +'</tr>';
+      }).join('')
+    : '<tr><td colspan="9" class="empty">ไม่มีรายการ</td></tr>';
+}
+
+function reprintReceipt(ts){
+  const t=TXN.find(function(x){return x.ts===ts;});if(!t)return;
+  const c=LU[t.plot];if(!c){alert('ไม่พบข้อมูลแปลง '+t.plot);return;}
+  const sorted=t.sortedMonths||[];
+  const n=sorted.length||1;
+  const total=t.total;
+  const ptype=t.ptype;
+  const year=t.year||2569;
+  const fdate=fmtDate(t.date);
+  const cb=ty=>`<span class="rv-cb-box">${ptype===ty?'✓':''}</span> ${ty}`;
+  const monthRows=sorted.map(m=>`<div class="rv-tbl-row"><div class="rv-detail" style="padding-left:24px;color:#444">${MF[m]} ${year}</div><div class="rv-amt" style="font-size:13.5px">${fmt(c.monthly)}</div></div>`).join('');
+  const html=buildReceiptFullHTML({plot:t.plot,c,num:t.num,date:t.date,fdate,ptype,sorted,n,total,year},monthRows,cb);
+  const w=window.open('','_blank');
+  w.document.write(html);w.document.close();setTimeout(()=>w.print(),700);
+}
+
+
+
+
+/* ── PLOT LOOKUP ── */
+function plotLookup(val){
+  const p=val.toUpperCase().trim(),c=LU[p];
+  const el=document.getElementById('r-info');if(!el)return;
+  if(c){
+    const o=OWE[p];
+    let msg=`<strong>${p} — ${c.name}</strong> | ${c.area} ตร.ว | ${fmt(c.monthly)} ฿/เดือน`;
+    if(!c.transfer_date){msg+=` | <span style="color:var(--text3)">ยังไม่มีวันโอน</span>`;}
+    else if(o){msg+=` | <span style="color:var(--red);font-weight:600">ค้าง ${o.months} เดือน (${fmt(o.total)} ฿) — ${o.owed_months.map(ym=>fmtYM(ym)).join(', ')}</span>`;}
+    else{
+      const td=new Date(c.transfer_date);
+      const ep=addMonths(new Date(td.getFullYear(),td.getMonth(),1),24);
+      const epStr=ep.toLocaleDateString('th-TH',{month:'short',year:'numeric'});
+      msg+=` | <span style="color:var(--blue)">จ่ายถึง ${epStr}</span>`;
+    }
+    el.innerHTML=msg;el.style.display='block';
+    el.className='alert '+(o?'danger':'info');
+
+    // อัปเดต mbtn ให้ highlight เดือนที่ค้างตามปีที่เลือก
+    var selYear = parseInt(document.getElementById('r-year').value)||2569;
+    var selYearCE = selYear - 543;
+    if(o && o.owed_months){
+      // กรองเดือนที่ค้างเฉพาะปีที่เลือก
+      var owedThisYear = o.owed_months.filter(function(ym){
+        return ym.split('-')[0] === String(selYearCE);
+      });
+      selMonths = owedThisYear.map(function(ym){ return parseInt(ym.split('-')[1]); });
+    } else {
+      selMonths = [];
+    }
+    document.querySelectorAll('.mbtn').forEach(function(b){
+      b.classList.toggle('sel', selMonths.includes(+b.dataset.m));
+    });
+    // คำนวณยอดใหม่
+    _calcTotal = +(c.monthly * selMonths.length).toFixed(2);
+    var actualEl = document.getElementById('r-actual');
+    if(actualEl){ actualEl.value = _calcTotal; onActualChange(_calcTotal); }
+    // แสดง hint ว่ามีเดือนค้างปีอื่นด้วยไหม
+    if(o && o.owed_months){
+      var otherYears = [...new Set(o.owed_months
+        .filter(ym => ym.split('-')[0] !== String(selYearCE))
+        .map(ym => parseInt(ym.split('-')[0])+543))];
+      if(otherYears.length>0){
+        var hint = document.getElementById('r-year-hint');
+        if(!hint){
+          hint = document.createElement('div');
+          hint.id = 'r-year-hint';
+          hint.style.cssText = 'font-size:12px;color:var(--amber);margin-top:4px';
+          el.parentNode.insertBefore(hint, el.nextSibling);
+        }
+        hint.textContent = '⚠️ มีเดือนค้างในปี: '+otherYears.join(', ')+' ด้วย (เปลี่ยนปีเพื่อออกใบเสร็จ)';
+      } else {
+        var hint2 = document.getElementById('r-year-hint');
+        if(hint2) hint2.textContent = '';
+      }
+    }
+  }else if(p.length>1){el.textContent='ไม่พบแปลงนี้';el.className='alert danger';el.style.display='block';}
+  else el.style.display='none';
+}
+document.querySelectorAll('.mbtn').forEach(b=>b.onclick=function(){
+  const m=+this.dataset.m,i=selMonths.indexOf(m);
+  if(i>=0)selMonths.splice(i,1);else selMonths.push(m);
+  document.querySelectorAll('.mbtn').forEach(x=>x.classList.toggle('sel',selMonths.includes(+x.dataset.m)));
+});
+
+/* ── GEN RECEIPT ── */
+function buildReceiptDocHTML(d,monthRows,cb){
+  return`<div class="doc-wrap" id="rv-doc">
+  <div style="display:flex;align-items:center;gap:16px;padding:12px 20px 10px"><img src="data:image/jpeg;base64,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" style="width:120px;height:120px;object-fit:contain;flex-shrink:0"><div style="flex:1;text-align:center"><div style="font-size:17px;font-weight:700">บริษัท สุข เอสเตท ดีเวลล็อปเม้นท์ จำกัด (สำนักงานใหญ่)</div><div style="font-size:12.5px;font-weight:600;color:#333;margin-top:1px">SOOK ESTATE DEVELOPMENT CO.,LTD.</div><div style="font-size:12.5px;color:#444;margin-top:2px">ที่อยู่ : 40/2 ม.4 ต.ห้วยขมิ้น อ.หนองแค จ.สระบุรี</div><div style="font-size:12.5px;color:#444">โทร. 096-9824242 &nbsp;&nbsp; เลขประจำตัวผู้เสียภาษีอากร 0195559001405</div></div></div><div style="border-top:2.5px solid #1a237e"></div><div style="text-align:center;padding:7px 20px 8px;background:#fafafa"><div style="font-size:16px;font-weight:700;letter-spacing:2px;color:#1a237e">ใบเสร็จรับเงินค่าส่วนกลาง</div><div style="font-size:13px;font-weight:600;color:#555;margin-top:1px">โครงการบ้านแสนสุข แก่งคอย</div></div><div style="border-bottom:2.5px solid #1a237e"></div>
+  <div class="rv-tbl-hd" style="background:#dbeafe;border-bottom:1px solid #93c5fd"><div style="flex:1">รายละเอียด</div><div style="width:150px;text-align:right">รวมจำนวนเงิน</div></div>
+  <div style="display:flex;justify-content:space-between;padding:6px 20px 4px;font-size:13px;color:#444;border-bottom:1px solid #93c5fd;margin-bottom:4px">
+    <div>เลขที่ใบเสร็จ: <strong>${d.num}</strong></div>
+    <div>วันที่รับเงิน: <strong>${fmtDate(d.date)}</strong></div>
+  </div>
+  <div class="rv-tbl-row">
+    <div class="rv-detail">
+      <div>ค่าส่วนกลางโครงการบ้านแสนสุข แก่งคอย &nbsp; แปลง <strong>${d.plot}</strong> &nbsp; ${d.c.name}</div>
+      <div class="rv-sub">เนื้อที่ดิน ${d.c.area} ตารางวา × ${CFG.rate} บาท/ตร.ว = ${fmt(d.c.monthly)} บาท/เดือน</div>
+    </div>
+    <div class="rv-amt"></div>
+  </div>
+  ${monthRows}
+  <div class="rv-sum">รวม ${d.n} เดือน × ${fmt(d.c.monthly)} = ${fmt(d.calcTotal||d.total)} บาท${d.calcTotal&&d.total!==d.calcTotal?` <span style="color:#b45309;font-size:12px">(รับจริง ${fmt(d.total)} บาท)</span>`:''}</div>
+  <div class="rv-words">( — ${bahtWords(d.total)} — )</div>
+  <div class="rv-total" style="border-top:2.5px solid #1a237e;color:#1a237e"><span>ยอดรวมสุทธิ</span><span>${fmt(d.total)} บาท</span></div>
+  <div class="rv-sign">
+    <div><div class="rv-sign-line"></div><div class="rv-sign-name">ลูกค้า</div><div style="font-size:12px;color:#666">( .......................................... )</div></div>
+    <div><div class="rv-sign-line"></div><div class="rv-sign-name">ผู้รับเงิน</div><div style="font-size:12px;color:#666">( .......................................... )</div></div>
+  </div>
+  <div class="rv-note">กรณีชำระด้วยเช็ค ใบเสร็จฯ นี้จะสมบูรณ์ต่อเมื่อบริษัทฯ ได้รับเงินแล้วเท่านั้น</div>
+  <div class="rv-pay"><span class="rv-pay-lbl">รับชำระเป็น</span>
+    <span class="rv-cb">${cb('เงินโอน')}</span>
+    <span class="rv-cb">${cb('เงินสด')}</span>
+    <span class="rv-cb">${cb('แคชเชียร์เชค')}</span>
+  </div>
+</div>`;
+}
+
+function buildReceiptFullHTML(d,monthRows,cb){
+  const allCSS=Array.from(document.styleSheets).map(s=>{try{return Array.from(s.cssRules).map(r=>r.cssText).join('\n');}catch(e){return '';}}).join('\n');
+  return`<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>ใบเสร็จ ${d.plot} ${d.num}</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>${allCSS} body{background:#f5f5f5;display:flex;justify-content:center;padding:20px} .doc-wrap{max-width:720px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,.15)} @page{margin:1.5cm;size:A4} @media print{body{background:#fff;padding:0} .doc-wrap{box-shadow:none}}</style>
+</head><body>${buildReceiptDocHTML(d,monthRows,cb)}</body></html>`;
+}
+
+
+function onActualChange(val){
+  const note=document.getElementById('r-actual-note');
+  if(!note)return;
+  const actual=parseFloat(val);
+  note.style.display=(actual&&Math.abs(actual-_calcTotal)>0.01)?'block':'none';
+}
+function resetActual(){
+  const el=document.getElementById('r-actual');
+  if(el){el.value=_calcTotal;onActualChange(_calcTotal);}
+}
+
+function genReceipt(){
+  const plot=document.getElementById('r-plot').value.toUpperCase().trim();
+  const c=LU[plot];if(!c){alert('กรุณาระบุแปลงที่ถูกต้อง');return}
+  if(!selMonths.length){alert('กรุณาเลือกเดือนที่ชำระ');return}
+  const year=+document.getElementById('r-year').value;
+  const date=document.getElementById('r-date').value;
+  const num=document.getElementById('r-num').value||'RV-SSKK-04-'+String(c.plot_num).padStart(3,'0');
+  const ptype=document.getElementById('r-ptype').value;
+  const sorted=[...selMonths].sort((a,b)=>a-b);
+  const n=sorted.length;
+  _calcTotal=+(c.monthly*n).toFixed(1);
+  // ใช้ยอดที่แก้ไข ถ้ากรอกไว้
+  const actualEl=document.getElementById('r-actual');
+  var actualVal=parseFloat(actualEl?actualEl.value:0);
+  const total=(!isNaN(actualVal)&&actualVal>0)?+actualVal.toFixed(2):_calcTotal;
+  // อัปเดต field ให้แสดง calc total ถ้ายังว่าง
+  if(actualEl&&(!actualEl.value||actualEl.value==_calcTotal)){
+    actualEl.value=_calcTotal;
+    onActualChange(_calcTotal);
+  }
+  const fdate=fmtDate(date);
+  const cb=t=>`<span class="rv-cb-box">${ptype===t?'✓':''}</span> ${t}`;
+  // แสดงยอดแต่ละเดือนตามที่คำนวณ แต่ยอดรวมใช้ actual
+  const monthRows=sorted.map(m=>`<div class="rv-tbl-row"><div class="rv-detail" style="padding-left:24px;color:#444">${MF[m]} ${year}</div><div class="rv-amt" style="font-size:13.5px">${fmt(c.monthly)}</div></div>`).join('');
+  const d={plot,c,num,date,fdate,ptype,sorted,n,total,calcTotal:_calcTotal,year};
+  document.getElementById('receipt-area').innerHTML=buildReceiptDocHTML(d,monthRows,cb);
+  document.getElementById('receipt-actions').style.display='flex';
+  currentReceiptData=d;
+  document.getElementById('receipt-area').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ── SAVE ── */
+
+
+function clearForm(){
+  document.getElementById('r-plot').value='';
+  document.getElementById('r-info').style.display='none';
+  selMonths=[];document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('sel'));
+  const ae2=document.getElementById('r-actual');if(ae2)ae2.value='';
+  const an2=document.getElementById('r-actual-note');if(an2)an2.style.display='none';
+  _calcTotal=0;
+  document.getElementById('receipt-area').innerHTML=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:60px 20px;text-align:center;color:var(--text3)"><div style="font-size:40px;opacity:.25;margin-bottom:12px">🧾</div><div>กรอกข้อมูลด้านซ้าย แล้วกด "แสดงใบเสร็จ"</div></div>`;
+  document.getElementById('receipt-actions').style.display='none';
+  currentReceiptData=null;
+}
+
+/* ── PRINT ── */
+function doPrint(type){
+  const id=type==='receipt'?'rv-doc':'inv-doc';
+  const el=document.getElementById(id);
+  if(!el){alert('กรุณาแสดงเอกสารก่อนพิมพ์');return;}
+  const allCSS=Array.from(document.styleSheets).map(s=>{try{return Array.from(s.cssRules).map(r=>r.cssText).join('\n');}catch(e){return '';}}).join('\n');
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${type}</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>${allCSS} body{background:#fff;padding:1.5cm} .doc-wrap{box-shadow:none;border:1px solid #aaa;max-width:720px;margin:0 auto} @page{margin:1.5cm;size:A4} @media print{body{padding:0}}</style>
+</head><body>${el.outerHTML}</body></html>`);
+  w.document.close();setTimeout(()=>w.print(),800);
+}
+
+/* ── HTML DOWNLOAD ── */
+function dlBlob(content,filename,mime){const blob=new Blob([content],{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+
+function downloadReceiptHTML(){
+  if(!currentReceiptData)return;
+  const d=currentReceiptData;
+  const cb=t=>`<span class="rv-cb-box">${d.ptype===t?'✓':''}</span> ${t}`;
+  const monthRows=d.sorted.map(m=>`<div class="rv-tbl-row"><div class="rv-detail" style="padding-left:24px;color:#444">${MF[m]} ${d.year}</div><div class="rv-amt" style="font-size:13.5px">${fmt(d.c.monthly)}</div></div>`).join('');
+  dlBlob(buildReceiptFullHTML(d,monthRows,cb),`ใบเสร็จ_${d.plot}_${d.num}.html`,'text/html;charset=utf-8');
+  toast('⬇ ดาวน์โหลด HTML สำเร็จ — เปิดแล้วพิมพ์ได้เลย');
+}
+
+function downloadInvHTML(){
+  const el=document.getElementById('inv-doc');if(!el)return;
+  const allCSS=Array.from(document.styleSheets).map(s=>{try{return Array.from(s.cssRules).map(r=>r.cssText).join('\n');}catch(e){return '';}}).join('\n');
+  const html=`<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>ใบแจ้งหนี้ ${currentInvPlot}</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>${allCSS} body{background:#f5f5f5;display:flex;justify-content:center;padding:20px} .doc-wrap{max-width:720px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,.15)} @page{margin:1.5cm;size:A4} @media print{body{background:#fff;padding:0} .doc-wrap{box-shadow:none}}</style>
+</head><body>${el.outerHTML}</body></html>`;
+  dlBlob(html,`ใบแจ้งหนี้_${currentInvPlot}.html`,'text/html;charset=utf-8');
+  toast('⬇ ดาวน์โหลด HTML สำเร็จ');
+}
+
+/* ── EXCEL EXPORTS (pure JS) ── */
+function exportReceiptXLSX(){
+  if(!currentReceiptData)return;
+  const{plot,c,num,fdate,ptype,sorted,n,total,year}=currentReceiptData;
+  XW.dl(`ใบเสร็จ_${plot}_${num}.xlsx`,[{name:'ใบเสร็จ',rows:[
+    ['ใบเสร็จรับเงิน'],['บริษัท สุข เอสเตท ดีเวลล็อปเม้นท์ จำกัด'],[''],
+    ['เลขที่',num,'วันที่',fdate],['แปลง',plot,'ชื่อ',c.name],['ที่อยู่',`171/${c.plot_num} หมู่ 1 ต.สองคอน อ.แก่งคอย`],[''],
+    ['รายละเอียด','เดือน','จำนวน','ยอด (บาท)'],
+    [`ค่าส่วนกลาง แปลง ${plot}`,sorted.map(m=>MF[m]+' '+year).join(', '),n,total],
+    [`เนื้อที่ ${c.area} ตร.ว × ${CFG.rate} บาท = ${fmt(c.monthly)}/เดือน`,'','',''],[''],
+    ['ยอดรวมสุทธิ','','',total],
+    ['จำนวนเงิน (ตัวอักษร)',bahtWords(total),'',''],
+    ['ช่องทางชำระ',ptype,'',''],
+  ]}]);
+  toast('⬇ ดาวน์โหลด Excel สำเร็จ');
+}
+
+function exportOweXLSX(){
+  XW.dl(`ยอดค้าง_${MN[CFG.month]}${CFG.year+543}.xlsx`,[{name:'ยอดค้าง',rows:[
+    ['ยอดค้างชำระ'],[''],
+    ['แปลง','ชื่อ','เนื้อที่','ค่า/เดือน','เดือนค้าง','เดือนที่ค้าง','ยอดรวม','สถานะ'],
+    ...Object.entries(OWE).sort(([,a],[,b])=>b.total-a.total).map(([k,o])=>{const c=LU[k];return[k,c?c.name:'-',c?c.area:'-',c?c.monthly:'-',o.months,o.owed_months.map(ym=>fmtYM(ym)).join(', '),o.total,getStatus(k).label];})
+  ]}]);
+  toast('⬇ Export Excel สำเร็จ');
+}
+
+function exportInvXLSX(){
+  XW.dl(`ใบแจ้งหนี้_${MN[CFG.month]}${CFG.year+543}.xlsx`,[{name:'ใบแจ้งหนี้',rows:[
+    ['รายการใบแจ้งหนี้'],[''],
+    ['แปลง','ชื่อ','ค่า/เดือน','เดือนค้าง','เดือนที่ค้าง','ยอด','สถานะ'],
+    ...Object.entries(OWE).map(([k,o])=>{const c=LU[k];return[k,c?c.name:'-',c?c.monthly:'-',o.months,o.owed_months.map(ym=>fmtYM(ym)).join(', '),o.total,getStatus(k).label];})
+  ]}]);
+  toast('⬇ Export Excel สำเร็จ');
+}
+
+function exportSingleInvXLSX(){
+  if(!currentInvPlot)return;
+  const k=currentInvPlot,o=OWE[k],c=LU[k];if(!o||!c)return;
+  XW.dl(`ใบแจ้งหนี้_${k}.xlsx`,[{name:'ใบแจ้งหนี้',rows:[
+    ['ใบแจ้งหนี้ — แปลง '+k],[''],
+    ['แปลง',k],['ชื่อ',c.name],['เนื้อที่',c.area+' ตร.ว'],['ค่า/เดือน',c.monthly],[''],
+    ['เดือน','ยอด (บาท)'],
+    ...o.owed_months.map(ym=>{const[y,m]=ym.split('-');return[MF[+m]+' '+(+y+543),c.monthly];}),[''],
+    ['ยอดรวม',o.total],['จำนวนเงิน (ตัวอักษร)',bahtWords(o.total)],
+    ['สถานะ',getStatus(k).label],
+  ]}]);
+  toast('⬇ Export Excel สำเร็จ');
+}
+
+function exportLogXLSX(){
+  XW.dl('ประวัติใบเสร็จ.xlsx',[{name:'ประวัติ',rows:[
+    ['ประวัติการออกใบเสร็จ'],[''],
+    ['แปลง','ชื่อ','เลขที่ใบเสร็จ','วันที่','เดือนที่ชำระ','ยอด','ช่องทาง'],
+    ...TXN.map(t=>[t.plot,t.name,t.num,t.date,t.months,t.total,t.ptype]),
+  ]}]);
+  toast('⬇ Export Excel สำเร็จ');
+}
+
+/* ── EXCEL UPLOAD ── */
+function handleXlFile(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=e=>processXl(e.target.result,f.name);r.readAsArrayBuffer(f);}
+function handleXlDrop(e){e.preventDefault();document.getElementById('xl-zone').classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleXlFile({files:[f]});}
+
+async function processXl(buf,fname){
+  const out=document.getElementById('xl-out');
+  out.innerHTML=`<div class="ai-row"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span>กำลังอ่าน ${fname}...</span></div>`;
+  try{
+    if(!('DecompressionStream' in window)){
+      out.innerHTML=`<div class="alert danger">❌ Browser ของคุณไม่รองรับ DecompressionStream — กรุณาใช้ Chrome หรือ Edge เวอร์ชันล่าสุด</div>`;
+      return;
+    }
+    const wb=await parseXLSX(buf);
+    const sn=wb.sheetNames.includes('รายรับ')?'รายรับ':wb.sheetNames[0];
+    const data=wb.sheets[sn];
+    if(!data||data.length<3){out.innerHTML=`<div class="alert danger">ไม่พบข้อมูลใน Sheet "${sn}"</div>`;return;}
+
+    // Find header row (row with 'แปลง')
+    let hdrRow=-1;
+    for(let i=0;i<Math.min(data.length,6);i++){
+      if(data[i]&&data[i].some(v=>String(v||'').includes('แปลง'))){hdrRow=i;break;}
+    }
+    if(hdrRow<0){out.innerHTML=`<div class="alert danger">ไม่พบ header "แปลง" ใน Sheet "${sn}"</div>`;return;}
+
+    const hdr=data[hdrRow];
+    // Find columns
+    const findCol=(...names)=>{let idx=-1;hdr.forEach((v,i)=>{if(names.some(n=>String(v||'').trim().includes(n)))idx=i;});return idx;};
+    const tc=findCol('ประเภท','Type'),pnc=findCol('แปลง'),nc=findCol('เนื้อที่'),nnc=findCol('Unnamed: 4','ชื่อ'),xc=findCol('โอน');
+
+    // Date columns
+    const TARGET=new Date(CFG.year,CFG.month-1,1);
+    const dateCols=[];
+    hdr.forEach((v,i)=>{
+      if(!v)return;
+      let d=null;
+      try{d=new Date(v);if(isNaN(d))d=null;}catch(e){}
+      if(d&&!isNaN(d)&&d.getFullYear()>=2023&&d.getFullYear()<=2028)dateCols.push([i,d.toISOString().slice(0,7)]);
+    });
+
+    const newC=[],newO={};
+    for(let ri=hdrRow+1;ri<data.length;ri++){
+      const row=data[ri];if(!row)continue;
+      const pt=String(row[tc]||'').trim();
+      const pn=parseInt(String(row[pnc]||''),10);
+      if(!pt||!pn||isNaN(pn)||!['A','B','H'].includes(pt))continue;
+      const key=pt+pn;
+      let name=String(row[nnc]||'').replace(/\([^)]*\)/g,'').trim();
+      const area=parseFloat(String(row[nc]||'').replace(/[^0-9.]/g,''))||0;
+      if(area===0)continue;
+      const monthly=+(area*CFG.rate).toFixed(1);
+      // Transfer date (อ่านก่อน push)
+      let xd=null,xdStr=null;
+      if(xc>=0&&row[xc]){
+        let d=row[xc] instanceof Date?new Date(row[xc]):new Date(String(row[xc]));
+        if(!isNaN(d)){
+          if(d.getFullYear()>2400)d=new Date(d.getFullYear()-543,d.getMonth(),d.getDate());
+          xd=d;xdStr=d.toISOString().split('T')[0];
+        }
+      }
+      // หา last_paid = เดือนสุดท้ายที่มีตัวเลข
+      let lastPaidYM=null;
+      for(const [j2,ym2] of dateCols){
+        const vp=row[j2];const np=parseFloat(String(vp||'').replace(/[^0-9.]/g,''));
+        if(vp&&!isNaN(np)&&np>0)lastPaidYM=ym2;
+      }
+      if(name)newC.push({plot:key,name,area,monthly,plot_num:pn,type:pt,transfer_date:xdStr,last_paid:lastPaidYM});
+      if(!xd)continue;
+      const owed=dateCols.filter(([ci,ym])=>{
+        const d=new Date(ym+'-01');return d>=xd;
+      }).filter(([ci,ym])=>{
+        const v=row[ci];const n2=parseFloat(String(v||'').replace(/[^0-9.]/g,''));return(!v||isNaN(n2)||n2===0);
+      });
+      if(owed.length){
+        const yms=owed.map(([ci,ym])=>ym);
+        newO[key]={months:owed.length,total:+(monthly*owed.length).toFixed(1),owed_months:yms};
+      }
+    }
+    if(newC.length===0){out.innerHTML=`<div class="alert danger">ไม่พบข้อมูลลูกค้า (ตรวจสอบ column headers)</div>`;return;}
+    CUST=[...newC];LU={};CUST.forEach(c=>LU[c.plot]=c);
+    OWE=computeOwe(CUST,PAID); // คำนวณ OWE ใหม่จาก logic
+    renderDash();renderSummary();
+    out.innerHTML=`<div class="alert success">✅ โหลดสำเร็จ — ลูกค้า ${CUST.length} ราย | เรียกเก็บได้ ${Object.keys(OWE).length} แปลง</div>`;
+  }catch(e){out.innerHTML=`<div class="alert danger">ผิดพลาด: ${e.message}<br><small>ลองใช้ฟังก์ชันนี้เฉพาะเมื่อเปิดไฟล์ HTML จากเครื่อง (file://)</small></div>`;console.error(e);}
+}
+
+/* ── Minimal XLSX parser ── */
+/* ── async DEFLATE-aware unzip using DecompressionStream ── */
+async function inflateRaw(compressed){
+  // DecompressionStream expects raw deflate (no zlib header)
+  const ds=new DecompressionStream('deflate-raw');
+  const writer=ds.writable.getWriter();
+  const reader=ds.readable.getReader();
+  writer.write(compressed);
+  writer.close();
+  const chunks=[];
+  while(true){const{done,value}=await reader.read();if(done)break;chunks.push(value);}
+  const total=chunks.reduce((s,c)=>s+c.length,0);
+  const out=new Uint8Array(total);let pos=0;
+  chunks.forEach(c=>{out.set(c,pos);pos+=c.length;});
+  return out;
+}
+
+async function unzip(bytes){
+  const files={};
+  const dec=new TextDecoder('utf-8');
+  const v16=(o)=>bytes[o]|(bytes[o+1]<<8);
+  const v32=(o)=>bytes[o]|(bytes[o+1]<<8)|(bytes[o+2]<<16)|(bytes[o+3]<<24);
+  let i=0;
+  while(i<bytes.length-4){
+    if(bytes[i]===0x50&&bytes[i+1]===0x4B&&bytes[i+2]===0x03&&bytes[i+3]===0x04){
+      const method=v16(i+8);
+      const compSz=v32(i+18);   // compressed size
+      const nl=v16(i+26),el=v16(i+28);
+      const name=dec.decode(bytes.slice(i+30,i+30+nl));
+      const raw=bytes.slice(i+30+nl+el,i+30+nl+el+compSz);
+      let decoded;
+      try{
+        if(method===0){decoded=raw;} // stored — no compression
+        else if(method===8){decoded=await inflateRaw(raw);} // deflate
+        else{decoded=raw;}
+        files[name]=dec.decode(decoded);
+      }catch(e){files[name]='';}
+      i+=30+nl+el+compSz;
+    }else i++;
+  }
+  return files;
+}
+
+async function parseXLSX(buf){
+  const bytes=new Uint8Array(buf);
+  const files=await unzip(bytes);
+  const sharedStrings=parseSharedStrings(files['xl/sharedStrings.xml']||'');
+  const wbXML=files['xl/workbook.xml']||'';
+  const sheetNames=[];
+  const snRegex=/sheet name="([^"]*)"[^>]*r:id="(rId\d+)"/g;
+  let m;while((m=snRegex.exec(wbXML))!==null)sheetNames.push(m[1]);
+  const relsXML=files['xl/_rels/workbook.xml.rels']||'';
+  const relRegex=/Id="(rId\d+)"[^>]*Target="([^"]*)"/g;
+  const relMap={};while((m=relRegex.exec(relsXML))!==null)relMap[m[1]]=m[2];
+  const sheets={};
+  sheetNames.forEach((name)=>{
+    const ridRegex=new RegExp(`sheet name="${name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}"[^>]*r:id="(rId\\d+)"`);
+    const rm=wbXML.match(ridRegex);if(!rm)return;
+    const target=relMap[rm[1]];if(!target)return;
+    const cleanTarget=target.replace(/^\//,'');
+    const path=cleanTarget.startsWith('xl/')?cleanTarget:'xl/'+cleanTarget;
+    const wsXML=files[path]||files['xl/'+target]||'';
+    sheets[name]=parseWorksheet(wsXML,sharedStrings);
+  });
+  return{sheetNames,sheets};
+}
+
+function parseSharedStrings(xml){
+  const arr=[];const re=/<si>[\s\S]*?<t[^>]*>([\s\S]*?)<\/t>[\s\S]*?<\/si>/g;
+  let m;while((m=re.exec(xml))!==null)arr.push(m[1].replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#x[0-9A-Fa-f]+;/g,s=>String.fromCodePoint(parseInt(s.slice(3,-1),16))));
+  return arr;
+}
+
+function parseWorksheet(xml,ss){
+  const rows=[];
+  const rowRe=/<row[^>]*r="(\d+)"[^>]*>([\s\S]*?)<\/row>/g;
+  let rm;
+  while((rm=rowRe.exec(xml))!==null){
+    const ri=parseInt(rm[1])-1;
+    while(rows.length<=ri)rows.push([]);
+    const rowXML=rm[2];
+    const cellRe=/<c r="([A-Z]+)(\d+)"([^>]*)>([\s\S]*?)<\/c>/g;
+    let cm;
+    while((cm=cellRe.exec(rowXML))!==null){
+      const colStr=cm[1];let ci=0;
+      for(const ch of colStr)ci=ci*26+(ch.charCodeAt(0)-64);ci--;
+      const attrs=cm[3],inner=cm[4];
+      const vMatch=inner.match(/<v>([\s\S]*?)<\/v>/);
+      const val=vMatch?vMatch[1]:'';
+      while(rows[ri].length<=ci)rows[ri].push(null);
+      if(attrs.includes('t="s"'))rows[ri][ci]=(ss[parseInt(val)]!==undefined)?ss[parseInt(val)]:val;
+      else if(attrs.includes('t="b"'))rows[ri][ci]=val==='1';
+      else if(val)rows[ri][ci]=isNaN(+val)?val:+val;
+    }
+  }
+  return rows;
+}
+
+/* ── EDIT PLOT ── */
+function loadEditPlot(val){
+  var p = val.toUpperCase().trim();
+  if(p.length < 2){ document.getElementById('edit-form').style.display='none'; return; }
+  var cu = LU[p];
+  var form = document.getElementById('edit-form');
+  var badge = document.getElementById('edit-new-badge');
+  var typeEl = document.getElementById('edit-type');
+  if(cu){
+    // แปลงมีอยู่แล้ว — โหลดข้อมูล
+    document.getElementById('edit-name').value = cu.name || '';
+    document.getElementById('edit-area').value = cu.area || '';
+    document.getElementById('edit-xdate').value = cu.transfer_date || '';
+    document.getElementById('edit-lp').value = cu.last_paid || '';
+    if(typeEl) typeEl.value = cu.type || 'A';
+    if(badge) badge.style.display='none';
+    form.style.display='block';
+  } else if(p.length >= 2){
+    // แปลงใหม่ — เปิดฟอร์มเปล่า
+    document.getElementById('edit-name').value = '';
+    document.getElementById('edit-area').value = '';
+    document.getElementById('edit-xdate').value = '';
+    document.getElementById('edit-lp').value = '';
+    // ดึง type จากตัวอักษรแรก
+    var t = p.match(/^([ABH])/);
+    if(typeEl) typeEl.value = t ? t[1] : 'A';
+    if(badge) badge.style.display='block';
+    form.style.display='block';
+  }
+}
+
+
+/* ── CONFIG ── */
+function applyConfig(){
+  CFG.month=+document.getElementById('cfg-m').value;
+  CFG.year=+document.getElementById('cfg-y').value;
+  CFG.rate=+document.getElementById('cfg-r').value;
+  CUST.forEach(c=>{c.monthly=+(c.area*CFG.rate).toFixed(1);LU[c.plot]=c;});
+  OWE=computeOwe(CUST,PAID);
+  renderDash();renderSummary();
+  document.getElementById('cfg-msg').innerHTML='<div class="alert success">✓ อัปเดตแล้ว</div>';
+  setTimeout(()=>document.getElementById('cfg-msg').innerHTML='',2500);
+}
+function renderSummary(){
+  const debt=Object.values(OWE).reduce((s,o)=>s+o.total,0);
+  document.getElementById('cfg-summary').innerHTML=
+    `ลูกค้า: <strong>${CUST.length}</strong> | เรียกเก็บได้: <strong>${Object.keys(OWE).length}</strong> แปลง | รวม: <strong>${fmt(debt)}</strong> บาท | อัตรา: <strong>${CFG.rate}</strong> บาท/ตร.ว`;
+}
+
+
+document.addEventListener('DOMContentLoaded',function(){loadAllData();});
+
+/* ════ Export ใบเสร็จหลายชีท ════ */
+async function exportAllReceiptsXLSX(){
+  var fromEl2 = document.getElementById('log-date-from');
+  var toEl2 = document.getElementById('log-date-to');
+  var fromVal2 = fromEl2 ? fromEl2.value : '';
+  var toVal2 = toEl2 ? toEl2.value : '';
+  var filtered = TXN.slice();
+  if(fromVal2) filtered = filtered.filter(function(t){ return (t.date||'') >= fromVal2; });
+  if(toVal2)   filtered = filtered.filter(function(t){ return (t.date||'') <= toVal2; });
+  if(!filtered.length){ toast('ไม่มีรายการ','amber'); return; }
+
+  var cssText = '';
+  try {
+    var sheets = Array.from(document.styleSheets);
+    for(var si=0;si<sheets.length;si++){
+      try{ cssText += Array.from(sheets[si].cssRules).map(function(r){return r.cssText;}).join(' '); }
+      catch(e){}
+    }
+  } catch(e){}
+
+  var pages = [];
+  for(var fi=0;fi<filtered.length;fi++){
+    var t = filtered[fi];
+    var cu = LU[t.plot]; if(!cu) continue;
+    var sorted = t.sortedMonths || [];
+    var n = sorted.length || 1;
+    var ptype = t.ptype;
+    var cb = function(ty){ return '<span class="rv-cb-box">'+(ptype===ty?'✓':'')+'</span> '+ty; };
+    var monthRows = sorted.map(function(m){
+      return '<div class="rv-tbl-row"><div class="rv-detail" style="padding-left:24px;color:#444">'+MF[m]+' '+t.year+'</div><div class="rv-amt" style="font-size:13.5px">'+fmt(cu.monthly)+'</div></div>';
+    }).join('');
+    var fdate = fmtDate(t.date);
+    var d = {plot:t.plot,c:cu,num:t.num,date:t.date,fdate:fdate,ptype:t.ptype,sorted:sorted,n:n,total:t.total,calcTotal:t.total,year:t.year};
+    pages.push(buildReceiptDocHTML(d, monthRows, cb));
+  }
+
+  if(!pages.length){ toast('ไม่มีรายการ','amber'); return; }
+
+  var label = (fromVal2&&toVal2) ? fromVal2+' ถึง '+toVal2 : (fromVal2||toVal2||'ทั้งหมด');
+  var printStyle = ' body{background:#f5f5f5;padding:20px} .doc-wrap{max-width:720px;width:100%;margin:0 auto 40px;box-shadow:0 2px 12px rgba(0,0,0,.15)} @media print{ body{background:#fff;padding:0} .doc-wrap{box-shadow:none;margin:0;max-width:100%;page-break-after:always} .doc-wrap:last-child{page-break-after:auto} }';
+  var html = '<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">'
+    + '<title>ใบเสร็จ '+label+'</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">'
+    + '<style>'+cssText+printStyle+'</style>'
+    + '</head><body>'+pages.join('')+'</body></html>';
+
+  var w = window.open('','_blank');
+  if(!w){ alert('กรุณาอนุญาต popup ใน browser ก่อนครับ'); return; }
+  w.document.write(html);
+  w.document.close();
+  toast('✅ เปิด '+pages.length+' ใบ — กด Ctrl+P หรือ Save as PDF');
+}
+
+/* ════ Export รวมใบแจ้งหนี้ทุกแปลงที่กรองอยู่ ════ */
+function exportAllInvoicesHTML(){
+  // คำนวณ oweForExport จาก year+month ที่เลือก
+  var yrSel2 = document.getElementById('inv-bill-year');
+  var monSel2 = document.getElementById('inv-bill-mon');
+  var nowE = new Date();
+  var selY2 = yrSel2 && yrSel2.value ? parseInt(yrSel2.value) : nowE.getFullYear();
+  var selM2 = monSel2 && monSel2.value ? parseInt(monSel2.value)-1 : nowE.getMonth();
+  var isCustom2 = (yrSel2 && yrSel2.value) || (monSel2 && monSel2.value);
+  var selectedBM2 = isCustom2 ? (selY2+'-'+String(selM2+1).padStart(2,'0')) : '';
+  var oweForExport = selectedBM2 ? (function(){
+    var bp=selectedBM2.split('-');
+    return computeOweCustom(CUST,PAID,new Date(parseInt(bp[0]),parseInt(bp[1])-1,1));
+  })() : OWE;
+
+  if(!oweForExport){ toast('ไม่มีข้อมูล','amber'); return; }
+
+  var q = (document.getElementById('inv-q').value||'').toLowerCase();
+  var minM = parseInt(document.getElementById('inv-months').value)||0;
+  var oKeys = Object.keys(oweForExport);
+  var plots = oKeys.filter(function(k){
+    var o = oweForExport[k]; var cu = LU[k];
+    if(!o||!cu) return false;
+    if(minM && o.months < minM) return false;
+    if(q && !cu.name.toLowerCase().includes(q) && !k.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  if(!plots.length){ toast('ไม่มีรายการที่แสดง','amber'); return; }
+
+  var cssText = '';
+  try{
+    var sheets = Array.from(document.styleSheets);
+    for(var si=0;si<sheets.length;si++){
+      try{ cssText += Array.from(sheets[si].cssRules).map(function(r){return r.cssText;}).join(' '); }catch(e){}
+    }
+  }catch(e){}
+
+  var ivD = getInvIssueDate();
+  var ivDTh = ivD.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+  // ครบกำหนด = สิ้นเดือนเดียวกับวันที่ออกใบ
+  var dueD = new Date(ivD.getFullYear(),ivD.getMonth()+1,0);
+  var dueTh = dueD.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+  var now = ivD;
+
+  var pages = plots.map(function(k){
+    var o = oweForExport[k]; var cu = LU[k];
+    var ivNum = 'IV-SSKK-'+String(now.getMonth()+1).padStart(2,'0')+(now.getFullYear()+543)+'-'+String(cu.plot_num).padStart(3,'0');
+    return buildInvHTML(k, cu, o, ivNum, ivDTh, dueTh);
+  });
+
+  var printStyle = ' body{background:#f5f5f5;padding:20px} .doc-wrap{max-width:720px;width:100%;margin:0 auto 40px;box-shadow:0 2px 12px rgba(0,0,0,.15)} @media print{ body{background:#fff;padding:0} .doc-wrap{box-shadow:none;margin:0;max-width:100%;page-break-after:always} .doc-wrap:last-child{page-break-after:auto} }';
+
+  var html = '<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">'
+    + '<title>ใบแจ้งหนี้ '+plots.length+' แปลง</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">'
+    + '<style>'+cssText+printStyle+'</style>'
+    + '</head><body>'+pages.join('')+'</body></html>';
+
+  var w = window.open('','_blank');
+  if(!w){ alert('กรุณาอนุญาต popup ใน browser ก่อนครับ'); return; }
+  w.document.write(html);
+  w.document.close();
+  toast('✅ เปิดใบแจ้งหนี้ '+plots.length+' ใบ — กด Ctrl+P ปริ้นได้เลย');
+}
+
+</script>
+</body>
+</html>
